@@ -1,10 +1,22 @@
-export default function Socket(socketEndPoint="") {
-    this.socket = new WebSocket(`${process.env.REACT_APP_BACKEND_URL}${socketEndPoint}`)
+import { over } from "stompjs";
+
+export default class Socket {
+  constructor() {
+    const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_URL}`);
+    const client = over(socket);
+    client.debug = null;
+    this.client = client;
+  }
+  send(endpoint, message) {
+    if (this.client) {
+      this.client.send(endpoint, {}, message);
+    }
+  }
+  subscribe(endpoint, callback) {
+    this.client.connect({}, () => {
+      this.client.subscribe(endpoint, callback);
+    });
+  }
 }
 
-Socket.prototype.send = function(message) {
-    this.socket.send(message)
-}
-Socket.prototype.listen = function(callback) {
-    this.socket.onmessage = callback
-}
+
