@@ -7,6 +7,7 @@ export default class Socket {
     client.debug = null;
     this.client = client;
   }
+  
   send(endpoint, message) {
     if (this.client) {
       this.client.send(endpoint, {}, message);
