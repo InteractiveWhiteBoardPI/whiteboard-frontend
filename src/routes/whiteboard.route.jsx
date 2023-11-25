@@ -16,6 +16,7 @@ const Whiteboard = () => {
     const handleChange = (e) => {
         setWhiteBoardName(e.target.value)
     }
+    
 
     const showEditInput = () => setShowEditNameInput(true)
 
