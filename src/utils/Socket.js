@@ -9,10 +9,11 @@ export default class Socket {
   }
   
   send(endpoint, message) {
-    if (this.client) {
+    if (this.client && this.client.connected) {
       this.client.send(endpoint, {}, message);
     }
   }
+  
   subscribe(endpoint, callback) {
     this.client.connect({}, () => {
       this.client.subscribe(endpoint, callback);

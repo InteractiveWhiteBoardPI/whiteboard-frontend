@@ -5,15 +5,17 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { SessionProvider } from "./context/session/session.context";
 import { UserProvider } from "./context/user/user.context"
-
+import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <UserProvider>
-      <SessionProvider>
-        <App />
-      </SessionProvider>
-    </UserProvider>
+    <BrowserRouter>
+      <UserProvider>
+        <SessionProvider>
+          <App />
+        </SessionProvider>
+      </UserProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 reportWebVitals();
