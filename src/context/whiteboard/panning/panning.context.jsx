@@ -10,7 +10,8 @@ export const PanningProvider = ({ children }) => {
         setToGrab,
         setToGrabbing,
         movesArray,
-        setBucketColor
+        setBucketColor,
+        bucketColor
     } = useWhiteboardContext()
     const [isDragging, setIsDragging,] = useState(false)
     const [startPosition, setStartPosition] = useState({ x: 0, y: 0 })
@@ -18,19 +19,19 @@ export const PanningProvider = ({ children }) => {
 
     const clearCanvas = () => {
         if (context) {
-            context.fillRect(0, 0, boundaries.width, boundaries.height)
+            context.fillStyle = bucketColor
+            context.fillRect(0,0, boundaries.width,boundaries.height)
         }
     }
-    
     useEffect(() => {
         if (context) {
             const drawCanvas = () => {
                 clearCanvas()
                 for (let i = 0; i < movesArray.length; i++) {
-                    const {positions, color, width, isBucket } = movesArray[i]
+                    const {positions, color, width, isBucket, bkColor } = movesArray[i]
                     if(isBucket){
-                        setBucketColor(color)
-                        context.fillStyle = color
+                        setBucketColor(bkColor)
+                        context.fillStyle = bkColor
                         context.fillRect(0, 0, boundaries.width, boundaries.height)
                     } else {
                         for (let j = 1; j < positions.length; j++) {
