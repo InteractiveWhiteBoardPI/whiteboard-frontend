@@ -8,9 +8,9 @@ module.exports = {
       colors: {
       }
     },
-    
+  plugins: [
+    require('daisyui'),
+  ],
   },
-  daisyui: {
-  },
-  plugins: [require("daisyui")],
+  
 }
