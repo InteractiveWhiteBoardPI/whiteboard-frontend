@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import UseChatContext from "../../context/chat/useChatContext";
+import UseChatContext from "../../../context/chat/useChatContext";
 
 const UserSelector = () => {
     const [users, setUsers] = useState([]);
@@ -64,7 +64,7 @@ const UserSelector = () => {
                         newUsers.map((user) => (
                             <div
                                 className="bg-black bg-opacity-40 text-white rounded-xl mb-2 hover:bg-opacity-70 cursor-pointer"
-                                key={user.id}
+                                key={user.uid}
                                 onClick={handleChosenUser.bind(this, user)}
                             >
                                 <li className="m-2">

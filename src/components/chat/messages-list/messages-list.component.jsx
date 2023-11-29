@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ChatBubble from "../chat-bubble/chat-bubble.component";
-import UseChatContext from "../../context/chat/useChatContext";
+import UseChatContext from "../../../context/chat/useChatContext";
 
 const MessagesList = ({ user, currentUser }) => {
   const [messages, setMessages] = useState([])

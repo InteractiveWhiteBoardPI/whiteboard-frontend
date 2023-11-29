@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import Socket from "../../utils/Socket";
+import Socket from "../../../utils/Socket";
 import ConversationInput from "../conversation-input/conversation-input.component";
 import ConversationHeader from "../conversation-header/conversation-header.component";
 import MessagesList from "../messages-list/messages-list.component";
-import { formatDateForBackend } from "../../utils/format-date";
-import UseChatContext from "../../context/chat/useChatContext";
-import useUserContext from "../../context/user/useUserContext";
+import { formatDateForBackend } from "../../../utils/format-date";
+import UseChatContext from "../../../context/chat/useChatContext";
+import useUserContext from "../../../context/user/useUserContext";
 const Conversation = () => {
   const { setMessages, chosenUser } =  UseChatContext()
   const { currentUser } = useUserContext()
@@ -21,6 +21,8 @@ const Conversation = () => {
     const messageCallback = ({ body }) => {
       const msg = JSON.parse(body);
 
+      console.log("recieved :", msg)
+
       setMessages((prev) => {
         const addedMessages = [...prev, msg];
         const filteredMessages = Array.from(
@@ -33,7 +35,7 @@ const Conversation = () => {
 
     Socket.connect();
     Socket.subscribe(`/user/${currentUser.uid}/private`, messageCallback);
-  }, [currentUser]);
+  }, []);
 
   const sendMessage = () => {
     const newMessage = {

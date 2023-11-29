@@ -1,7 +1,7 @@
 import { RxAvatar } from "react-icons/rx";
-import truncateString from "../../utils/truncate-string";
-import UseChatContext from "../../context/chat/useChatContext";
-import useUserContext from "../../context/user/useUserContext";
+import truncateString from "../../../utils/truncate-string";
+import UseChatContext from "../../../context/chat/useChatContext";
+import useUserContext from "../../../context/user/useUserContext";
 import { useEffect, useState } from "react";
 
 const ConversationName = ({ user, message }) => {
@@ -16,11 +16,11 @@ const ConversationName = ({ user, message }) => {
   useEffect(
     () => {
       const getUser = async () => {
-        const res = await fetch("http://localhost:8080/users/get/"+user)
+        const res = await fetch("http://localhost:8080/user/get/"+user)
 
-        const user = await res.json()
+        const json = await res.json()
 
-        setFullUserData(user)
+        setFullUserData(json)
       }
       getUser()
     }, [ user ]

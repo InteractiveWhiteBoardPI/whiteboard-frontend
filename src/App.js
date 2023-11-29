@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Auth from "./routes/auth.route";
 import Home from "./routes/home.route";
 import { useEffect } from "react";
@@ -8,19 +8,17 @@ import Chat from "./routes/chat.route";
 
 const App = () => {
   const { setCurrentUser } = useUserContext()
-  const navigate = useNavigate()
  
   useEffect(
     () => {
       const sub = async () => {
         const user = await getCurrentUser()
-        console.log(user)
         if(!user) return
         const { email , uid , displayName } = user
         setCurrentUser({
           email,
           uid,
-          username: displayName
+          username: displayName || email.split("@")[0]
         })
         //navigate("/")
       }

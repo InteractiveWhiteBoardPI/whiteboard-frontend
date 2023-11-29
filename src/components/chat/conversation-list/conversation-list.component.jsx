@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import UseChatContext from "../../context/chat/useChatContext";
+import UseChatContext from "../../../context/chat/useChatContext";
 import ConversationName from "../conversation-name/conversation-name.component"
-import useUserContext from "../../context/user/useUserContext";
+import useUserContext from "../../../context/user/useUserContext";
 
 const ConversationList = () => {
     const { groupedMessages } = UseChatContext()

@@ -18,6 +18,6 @@ module.exports = {
         selected: "#6AC6FF",
       },
     },
-    plugins: [require("daisyui")],
   },
+  plugins: [require("daisyui")],
 };

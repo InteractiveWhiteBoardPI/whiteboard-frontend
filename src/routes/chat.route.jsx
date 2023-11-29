@@ -1,6 +1,5 @@
-import Conversation from "../components/conversation/conversation.component";
-import Users from "../components/users/users.component";
-import { ChatProvider } from "../context/chat/chat.context";
+import Conversation from "../components/chat/conversation/conversation.component";
+import Users from "../components/chat/users/users.component";
 import UseChatContext from "../context/chat/useChatContext";
 
 
