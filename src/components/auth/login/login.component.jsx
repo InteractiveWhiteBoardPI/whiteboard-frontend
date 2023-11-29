@@ -23,8 +23,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const { email , uid } = await loginUser(formData.email, formData.password)
-
+        const {user : { email , uid} } = await loginUser(formData.email, formData.password)
         setCurrentUser({
             email, 
             uid,

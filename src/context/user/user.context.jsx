@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext({})
 
@@ -10,6 +9,8 @@ export const UserProvider = ({ children }) => {
     useEffect(
         () => {
             if(currentUser){
+
+                console.log(currentUser)
                 const saveUser = async () => {
                     await fetch("http://localhost:8080/user/save", {
                         method: 'POST',

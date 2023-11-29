@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-const plugin = require("tailwindcss/plugin")
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
@@ -19,6 +18,6 @@ module.exports = {
         selected: "#6AC6FF",
       },
     },
-    plugins: [require("daisyui")],
   },
+  plugins: [require("daisyui")],
 };
