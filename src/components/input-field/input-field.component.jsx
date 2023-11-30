@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function InputField({ label, value, onChange, type }) {
+export default function InputField({ label, value, onChange, type , className}) {
 
   return (
-    <div className="border-b border-white flex px-2 py-1">
+    <div className={`border-b border-white flex px-2 py-1 ${className}`}>
       {
         value==="" && (
           <div

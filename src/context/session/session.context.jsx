@@ -1,14 +1,24 @@
-import { createContext, useReducer } from "react";
-import sessionReducer, { INITIAL_STATE } from "./session.reducer";
+import { createContext, useState } from "react";
 
 const SessionContext = createContext({})
 
 export default SessionContext
 
-export const SessionProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(sessionReducer, INITIAL_STATE)
 
-    const value = { state ,dispatch }
+const INITIAL_STATE = {
+    uid : "",
+    id: "",
+    password: "",
+    host : {}
+}
+export const SessionProvider = ({ children }) => {
+    const [session , setSession] = useState(INITIAL_STATE)
+    const [memebers, setMemebers] = useState([])
+
+    const value = {
+        session,
+        setSession
+    }
 
     return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
 }
