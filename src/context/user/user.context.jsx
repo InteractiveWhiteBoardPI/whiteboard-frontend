@@ -1,14 +1,35 @@
-import { createContext, useReducer } from "react";
-import userReducer, { INITIAL_STATE } from "./user.reducer";
+import { createContext, useEffect, useState } from "react";
 
 const UserContext = createContext({})
 
 export default UserContext
 
 export const UserProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(userReducer, INITIAL_STATE);
+    const [currentUser, setCurrentUser] = useState(null)
+    useEffect(
+        () => {
+            if(currentUser){
 
-    const value = { state, dispatch };
+                console.log(currentUser)
+                const saveUser = async () => {
+                    await fetch("http://localhost:8080/user/save", {
+                        method: 'POST',
+                        mode:'cors',
+                        body: JSON.stringify(currentUser),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                }
+                saveUser()
+            }
+        }, [currentUser]
+    )
+
+    const value = {
+        currentUser,
+        setCurrentUser,
+    }
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }

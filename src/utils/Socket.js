@@ -1,24 +1,39 @@
-import { over } from "stompjs";
+import { over } from 'stompjs';
 
-export default class Socket {
+class Socket {
   constructor() {
-    const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_URL}`);
-    const client = over(socket);
-    client.debug = null;
-    this.client = client;
+    this.socket = null;
+    this.client = null;
+    this.connected = false;
   }
-  
+
+  connect() {
+    if (!this.client || !this.connected) {
+      const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_URL}`);
+      this.client = over(socket);
+      this.client.debug = null
+      this.client.connect({}, () => {
+        this.connected = true;
+      });
+
+      socket.onclose = () => {
+        this.connected = false
+        this.client = null
+      };
+    }
+  }
+
   send(endpoint, message) {
-    if (this.client && this.client.connected) {
+    if (this.client && this.connected) {
       this.client.send(endpoint, {}, message);
     }
   }
-  
+
   subscribe(endpoint, callback) {
-    this.client.connect({}, () => {
+    if (this.client && this.connected) {
       this.client.subscribe(endpoint, callback);
-    });
+    }
   }
 }
 
-
+export default new Socket();

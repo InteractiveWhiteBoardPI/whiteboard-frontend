@@ -6,16 +6,20 @@ import reportWebVitals from "./reportWebVitals";
 import { SessionProvider } from "./context/session/session.context";
 import { UserProvider } from "./context/user/user.context"
 import { BrowserRouter } from "react-router-dom";
+import { ChatProvider } from "./context/chat/chat.context";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <UserProvider>
-        <SessionProvider>
-          <App />
-        </SessionProvider>
-      </UserProvider>
-    </BrowserRouter>
+    <UserProvider>
+      <SessionProvider>
+        <ChatProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ChatProvider>
+      </SessionProvider>
+    </UserProvider>
   </React.StrictMode>
 );
 reportWebVitals();
