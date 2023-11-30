@@ -11,7 +11,7 @@ class Socket {
     if (!this.client || !this.connected) {
       const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_URL}`);
       this.client = over(socket);
-      this.client.debug = null 
+      this.client.debug = null
       this.client.connect({}, () => {
         this.connected = true;
       });

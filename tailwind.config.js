@@ -27,7 +27,7 @@ module.exports = {
         "label-clr":
           "linear-gradient(108deg, #F9FDFF_0.9%,_rgba(160,_160,_160,_0.90)_100.9%)",
 
-        
+
 
         selected: "#6AC6FF",
       },
