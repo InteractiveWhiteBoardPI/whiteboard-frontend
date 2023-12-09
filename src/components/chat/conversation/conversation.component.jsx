@@ -21,7 +21,7 @@ const Conversation = () => {
     const messageCallback = ({ body }) => {
       const msg = JSON.parse(body);
 
-      console.log("recieved :", msg)
+      //console.log("recieved :", msg)
 
       setMessages((prev) => {
         const addedMessages = [...prev, msg];
