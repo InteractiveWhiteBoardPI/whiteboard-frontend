@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import UseChatContext from "../../../context/chat/useChatContext";
+import useUserContext from "../../../context/user/useUserContext";
+import InputField from "../../input-field/input-field.component";
 
 const UserSelector = () => {
     const [users, setUsers] = useState([]);
@@ -7,6 +9,7 @@ const UserSelector = () => {
     const [searchText, setSearchText] = useState("");
     const [attemptedSearch, setAttemptedSearch] = useState(false);
     const { setChosenUser } = UseChatContext()
+    const {currentUser} = useUserContext();
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -17,7 +20,9 @@ const UserSelector = () => {
                 }
 
                 const jsonData = await response.json();
-                setUsers(jsonData);
+                setUsers(jsonData.filter((user) => (
+                    user.uid!=currentUser.uid
+                )));
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -45,25 +50,22 @@ const UserSelector = () => {
     };
     const handleChosenUser = (user) => {
         setChosenUser(user);
+        setAttemptedSearch(false);
     };
     return (
-        <div className="dropdown">
-            <input
-                type="text"
-                placeholder="Search..."
-                value={searchText}
-                onChange={handleSearch}
-                className="input input-bordered w-full max-w-xs"
-            />
+        <div className="flex dropdown justify-center ">
+            <div className="gap-8 bg-gradient-to-br from-light-clr-30 to-light-clr-10 w-full">
+                <InputField label={"Search a new user..."} value={searchText} onChange={handleSearch} type={"text"} className={""} />
+            </div>
             <ul
                 tabIndex="0"
-                className="w-full ml-2 mr-2 mt-1 dropdown-content z-[1] menu p-2 shadow rounded-box bg-dark-clr-50"
+                className="w-full mt-[33px] dropdown-content z-[1] menu p-2 shadow rounded bg-dark-clr-50"
             >
                 {attemptedSearch &&
                     (newUsers?.length > 0 ? (
                         newUsers.map((user) => (
                             <div
-                                className="bg-black bg-opacity-40 text-white rounded-xl mb-2 hover:bg-opacity-70 cursor-pointer"
+                                className="bg-black bg-opacity-40 text-white rounded mb-2 hover:bg-opacity-70 cursor-pointer"
                                 key={user.uid}
                                 onClick={handleChosenUser.bind(this, user)}
                             >
@@ -75,7 +77,7 @@ const UserSelector = () => {
                             </div>
                         ))
                     ) : (
-                        <div className="bg-black bg-opacity-40 text-white rounded-xl mb-2 hover:bg-opacity-70 cursor-pointer">
+                        <div className="bg-black bg-opacity-40 text-white rounded mb-2  hover:bg-opacity-70 cursor-pointer">
                             <li className="m-2">No user found</li>
                         </div>
                     ))}

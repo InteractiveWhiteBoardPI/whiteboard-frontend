@@ -1,7 +1,27 @@
 import { RiSendPlaneLine } from "react-icons/ri";
 import { MdOutlineAttachFile } from "react-icons/md";
+import UseChatContext from "../../../context/chat/useChatContext";
+import useUserContext from "../../../context/user/useUserContext";
 
-const ConversationInput = ({sendMessage,messageBody, setMsg}) => {
+
+const ConversationInput = ({sendMessage,messageBody, setMessage}) => {
+
+    const {chosenUser } =  UseChatContext()
+    const { currentUser } = useUserContext()
+    const handleSendMessage = () =>{
+        sendMessage();
+        setMessage({
+            messageBody: "",
+            receiver: chosenUser.uid,
+            sender: currentUser?.uid,
+            date: "",
+        });
+    }
+
+    const setMsg = (event) => {
+        setMessage(prev => ({...prev, messageBody: event.target.value}));
+    };
+
     return (
       <div className="p-4">
           <div className="bg-black rounded-full flex p-2">
@@ -17,7 +37,7 @@ const ConversationInput = ({sendMessage,messageBody, setMsg}) => {
             <div className="btn bg-grey bg-opacity-20 border-none hover:bg-opacity-40 rounded-3xl p-3 items-center">
               <RiSendPlaneLine
                 className="text-white w-5 h-5"
-                onClick={sendMessage}
+                onClick={handleSendMessage}
               />
             </div>
         </div>

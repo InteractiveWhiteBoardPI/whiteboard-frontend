@@ -37,6 +37,7 @@ const CreationSessionForm = () => {
       const json = await response.json()
 
       setSession(json)
+      navigate("/home/create-session/copy-link")
 
 
       console.log(json)
