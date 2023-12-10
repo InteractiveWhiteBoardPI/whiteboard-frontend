@@ -6,13 +6,15 @@ import MessagesList from "../messages-list/messages-list.component";
 import { formatDateForBackend } from "../../../utils/format-date";
 import UseChatContext from "../../../context/chat/useChatContext";
 import useUserContext from "../../../context/user/useUserContext";
+
+
 const Conversation = () => {
   const { setMessages, chosenUser } =  UseChatContext()
   const { currentUser } = useUserContext()
   const [message, setMessage] = useState({
     messageBody: "",
     receiver: chosenUser.uid,
-    sender: currentUser.uid,
+    sender: currentUser?.uid,
     date: "",
   })
 
@@ -34,36 +36,46 @@ const Conversation = () => {
     };
 
     Socket.connect();
-    Socket.subscribe(`/user/${currentUser.uid}/private`, messageCallback);
+    Socket.subscribe(`/user/${currentUser?.uid}/private`, messageCallback);
   }, []);
 
-  const sendMessage = () => {
+  const sendMessage = async() => {
     const newMessage = {
       ...message,
-      sender: currentUser.uid,
+      sender: currentUser?.uid,
       date: formatDateForBackend(new Date()),
     };
 
-    setMessages((prev) => [...prev, newMessage]);
+    const response = await fetch("http://localhost:8080/message/save", {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newMessage)
+    })
 
-    Socket.send("/app/private-message", JSON.stringify(newMessage));
+    const res = await response.json()
+    console.log(res)
+
+    setMessages((prev) => [...prev, res]);
+
+    Socket.send("/app/private-message", JSON.stringify(res));
   };
 
-  const setMsg = (event) => {
-    setMessage({ ...message, messageBody: event.target.value });
-  };
 
   return (
     <div className="flex flex-col w-full h-full">
       <ConversationHeader 
         username={chosenUser.username} 
+
       />
       <MessagesList
         user={chosenUser.uid}
-        currentUser={currentUser.uid}/>
+        currentUser={currentUser?.uid}/>
       <ConversationInput
         messageBody={message.messageBody}
-        setMsg={setMsg}
+        setMessage={setMessage}
         sendMessage={sendMessage}
       />
     </div>
