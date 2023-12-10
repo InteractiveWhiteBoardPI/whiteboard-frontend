@@ -18,7 +18,7 @@ const CreationSessionForm = () => {
   const handleChange = (field, event) => {
     setSessionFields({
       ...sessionFields,
-      [field] : event.target.value
+      [field]: event.target.value
     })
   }
   const handleCreateButtonClick = async () => {
@@ -30,19 +30,20 @@ const CreationSessionForm = () => {
         },
         body: JSON.stringify({
           ...sessionFields,
-          host : currentUser
+          host: currentUser
         }),
       });
-
+      console.log(response)
       const json = await response.json()
-
-      setSession(json)
-
-
-      console.log(json)
+      if(json){
+        setSession(json)
+  
+        navigate("/home/create-session/copy-link")
+      }
     } catch (error) {
       console.error("Error:", error);
     }
+
   };
 
   return (
@@ -51,13 +52,13 @@ const CreationSessionForm = () => {
         label="Session ID"
         className="w-1/2"
         value={sessionFields.name}
-        onChange={handleChange.bind(this,"name")}
+        onChange={handleChange.bind(this, "name")}
       />
       <InputField
         label="Session Password"
         className="w-1/2"
         value={sessionFields.password}
-        onChange={handleChange.bind(this,"password")}
+        onChange={handleChange.bind(this, "password")}
       />
       <div className="w-1/2">
         <Button

@@ -22,7 +22,7 @@ const LeftMenu = () => {
     }, [route.pathname]
   )
   return (
-    <div className="w-1/5 h-full pr-2 pl-4 text-white flex flex-col justify-between">
+    <div className="w-1/5 h-full pr-2 pl-4 pb-4 text-white flex flex-col justify-between ">
       <div className="flex flex-col gap-2">
         <MenuItem
           onClick={navigate.bind(this, "")}

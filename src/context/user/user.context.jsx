@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
         () => {
             if(currentUser){
 
-                console.log(currentUser)
+                //console.log(currentUser)
                 const saveUser = async () => {
                     await fetch("http://localhost:8080/user/save", {
                         method: 'POST',

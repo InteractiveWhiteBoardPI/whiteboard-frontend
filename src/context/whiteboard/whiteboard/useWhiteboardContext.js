@@ -19,7 +19,9 @@ const useWhiteboardContext = () => {
         setToBucket,
         isBucket,
         bucketColor, 
-        setBucketColor
+        setBucketColor,
+        whiteboardData,
+        setWhiteboardName
     } = useContext(WhiteboardContext)
 
     return {
@@ -39,7 +41,9 @@ const useWhiteboardContext = () => {
         setToBucket,
         isBucket,
         bucketColor,
-        setBucketColor
+        setBucketColor,
+        whiteboardData,
+        setWhiteboardName
     }
 }
 
