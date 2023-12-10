@@ -11,11 +11,13 @@ const CreationSessionForm = () => {
     name: "",
     password: "",
   })
+  const [errorMessage, setErrorMessage] = useState(null);
   const { currentUser } = useUserContext()
   const { setSession } = useSessionContext()
   const navigate = useNavigate()
 
   const handleChange = (field, event) => {
+    setErrorMessage("")
     setSessionFields({
       ...sessionFields,
       [field]: event.target.value
@@ -33,12 +35,16 @@ const CreationSessionForm = () => {
           host: currentUser
         }),
       });
-      console.log(response)
-      const json = await response.json()
-      if(json){
-        setSession(json)
-  
-        navigate("/home/create-session/copy-link")
+      if(response.status === 201) {
+        console.log(response)
+        const json = await response.json()
+        if(json){
+          setSession(json)
+
+          navigate("/home/create-session/copy-link")
+        }
+      } else {
+        setErrorMessage("Could not create session")
       }
     } catch (error) {
       console.error("Error:", error);
@@ -60,6 +66,13 @@ const CreationSessionForm = () => {
         value={sessionFields.password}
         onChange={handleChange.bind(this, "password")}
       />
+      {
+        errorMessage && (
+            <div className="text-error">
+              {errorMessage}
+            </div>
+          )
+      }
       <div className="w-1/2">
         <Button
           onClick={handleCreateButtonClick}
