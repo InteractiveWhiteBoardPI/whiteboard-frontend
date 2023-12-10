@@ -40,7 +40,7 @@ const App = () => {
         <Route path="chat" element={<Chat />} />
       </Route>
       <Route path="session/*" element={<Session />} />
-      <Route path="/whiteboard" element={<Whiteboard />} />
+      <Route path="/whiteboard/*" element={<Whiteboard />} />
     </Routes>
   );
 };

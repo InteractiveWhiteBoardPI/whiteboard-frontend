@@ -49,9 +49,9 @@ export const DrawingProvider = ({ children }) => {
                 context.fillRect(0,0, boundaries.width,boundaries.height)
                 setBucketColor(bkColor)
             } else {
-                console.log(bkColor, movesArray[i+1].bkColor)
+                
                 if(bkColor !== movesArray[i+1].bkColor){
-                    console.log("here")
+                    
                     context.fillStyle = bkColor
                     context.fillRect(0,0, boundaries.width,boundaries.height)
                     setBucketColor(bkColor)
@@ -91,7 +91,7 @@ export const DrawingProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        console.log(movesArray)
+        
     },[movesArray])
 
     const stopDrawing = () => {

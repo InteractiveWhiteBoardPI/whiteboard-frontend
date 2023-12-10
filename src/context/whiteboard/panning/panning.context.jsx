@@ -9,9 +9,8 @@ export const PanningProvider = ({ children }) => {
         boundaries,
         setToGrab,
         setToGrabbing,
-        movesArray,
-        setBucketColor,
-        bucketColor
+        bucketColor,
+        whiteboardData
     } = useWhiteboardContext()
     const [isDragging, setIsDragging,] = useState(false)
     const [startPosition, setStartPosition] = useState({ x: 0, y: 0 })
@@ -25,26 +24,12 @@ export const PanningProvider = ({ children }) => {
     }
     useEffect(() => {
         if (context) {
+            clearCanvas()
             const drawCanvas = () => {
-                clearCanvas()
-                for (let i = 0; i < movesArray.length; i++) {
-                    const {positions, color, width, isBucket, bkColor } = movesArray[i]
-                    if(isBucket){
-                        setBucketColor(bkColor)
-                        context.fillStyle = bkColor
-                        context.fillRect(0, 0, boundaries.width, boundaries.height)
-                    } else {
-                        for (let j = 1; j < positions.length; j++) {
-                            context.beginPath();
-                            context.moveTo(positions[j - 1].x - offset.x, positions[j - 1].y - offset.y)
-                            context.lineWidth = width
-                            context.strokeStyle = color
-                            context.lineCap = 'round'
-    
-                            context.lineTo(positions[j].x - offset.x, positions[j].y - offset.y)
-                            context.stroke();
-                        }
-                    }
+                const image = new Image()
+                image.src = whiteboardData.data
+                image.onload = () => {
+                    context.drawImage(image,-offset.x, -offset.y)
                 }
             }
             drawCanvas()

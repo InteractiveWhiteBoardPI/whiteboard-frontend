@@ -11,14 +11,16 @@ const CreationSessionForm = () => {
     name: "",
     password: "",
   })
+  const [errorMessage, setErrorMessage] = useState(null);
   const { currentUser } = useUserContext()
   const { setSession } = useSessionContext()
   const navigate = useNavigate()
 
   const handleChange = (field, event) => {
+    setErrorMessage("")
     setSessionFields({
       ...sessionFields,
-      [field] : event.target.value
+      [field]: event.target.value
     })
   }
   const handleCreateButtonClick = async () => {
@@ -30,19 +32,24 @@ const CreationSessionForm = () => {
         },
         body: JSON.stringify({
           ...sessionFields,
-          host : currentUser
+          host: currentUser
         }),
       });
+      if(response.status === 201) {
+        console.log(response)
+        const json = await response.json()
+        if(json){
+          setSession(json)
 
-      const json = await response.json()
-
-      setSession(json)
-
-
-      console.log(json)
+          navigate("/home/create-session/copy-link")
+        }
+      } else {
+        setErrorMessage("Could not create session")
+      }
     } catch (error) {
       console.error("Error:", error);
     }
+
   };
 
   return (
@@ -51,14 +58,21 @@ const CreationSessionForm = () => {
         label="Session ID"
         className="w-1/2"
         value={sessionFields.name}
-        onChange={handleChange.bind(this,"name")}
+        onChange={handleChange.bind(this, "name")}
       />
       <InputField
         label="Session Password"
         className="w-1/2"
         value={sessionFields.password}
-        onChange={handleChange.bind(this,"password")}
+        onChange={handleChange.bind(this, "password")}
       />
+      {
+        errorMessage && (
+            <div className="text-error">
+              {errorMessage}
+            </div>
+          )
+      }
       <div className="w-1/2">
         <Button
           onClick={handleCreateButtonClick}
