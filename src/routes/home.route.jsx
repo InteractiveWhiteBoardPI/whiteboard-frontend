@@ -10,7 +10,7 @@ const Home = () => {
             <div className="relative w-4/5 h-4/5 bg-dark-clr-70 rounded-3xl">
                 <Navbar />
                 <div className="flex w-full h-[85%] pt-5">
-                    <LeftMenu />
+                    <LeftMenu/>
                     <Outlet/>
                 </div>
             </div>

@@ -41,6 +41,7 @@ const App = () => {
       </Route>
       <Route path="session/*" element={<Session />} />
       <Route path="/whiteboard" element={<Whiteboard />} />
+      <Route path="/*" redirectTo="/home"></Route>
     </Routes>
   );
 };
