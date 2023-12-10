@@ -8,7 +8,6 @@ export const UserProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null)
     useEffect(
         () => {
-            console.log("user",currentUser)
             if(currentUser){
                 const saveUser = async () => {
                     await fetch("http://localhost:8080/user/save", {

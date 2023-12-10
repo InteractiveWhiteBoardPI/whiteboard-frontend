@@ -1,10 +1,16 @@
 import { FaPen } from "react-icons/fa";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import useWhiteboardContext from "../../../context/whiteboard/whiteboard/useWhiteboardContext";
 const WhiteboardNameEditor = () => {
-    const { setWhiteboardName } = useWhiteboardContext()
+    const { setWhiteboardName, whiteboardData } = useWhiteboardContext()
     const [name, setName] = useState("Untitled")
     const [showEditNameInput, setShowEditNameInput] = useState(false)
+
+    useEffect(() => {
+        if(whiteboardData){
+            setName(whiteboardData.name)
+        }
+    }, [whiteboardData]);
 
     const handleChange = (e) => {
         setName(e.target.value)

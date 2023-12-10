@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import Socket from "../../../utils/Socket";
+import {useEffect, useState} from "react";
+import socket from "../../../utils/Socket";
 import ConversationInput from "../conversation-input/conversation-input.component";
 import ConversationHeader from "../conversation-header/conversation-header.component";
 import MessagesList from "../messages-list/messages-list.component";
-import { formatDateForBackend } from "../../../utils/format-date";
+import {formatDateForBackend} from "../../../utils/format-date";
 import UseChatContext from "../../../context/chat/useChatContext";
 import useUserContext from "../../../context/user/useUserContext";
 
@@ -20,24 +20,22 @@ const Conversation = () => {
 
 
   useEffect(() => {
+    if(!currentUser) return
     const messageCallback = ({ body }) => {
-      const msg = JSON.parse(body);
 
-      //console.log("recieved :", msg)
+      const msg = JSON.parse(body);
 
       setMessages((prev) => {
         const addedMessages = [...prev, msg];
-        const filteredMessages = Array.from(
-          new Set(addedMessages.map(JSON.stringify))
+        return Array.from(
+            new Set(addedMessages.map(JSON.stringify))
         ).map(JSON.parse);
-
-        return filteredMessages;
       });
     };
 
-    Socket.connect();
-    Socket.subscribe(`/user/${currentUser?.uid}/private`, messageCallback);
-  }, []);
+    socket.connect();
+    socket.subscribe(`/user/${currentUser?.uid}/private`, messageCallback);
+  }, [currentUser]);
 
   const sendMessage = async() => {
     const newMessage = {
@@ -56,19 +54,17 @@ const Conversation = () => {
     })
 
     const res = await response.json()
-    console.log(res)
 
     setMessages((prev) => [...prev, res]);
 
-    Socket.send("/app/private-message", JSON.stringify(res));
+    socket.send("/app/private-message", JSON.stringify(res));
   };
 
 
   return (
     <div className="flex flex-col w-full h-full">
       <ConversationHeader 
-        username={chosenUser.username} 
-
+        username={chosenUser.username}
       />
       <MessagesList
         user={chosenUser.uid}

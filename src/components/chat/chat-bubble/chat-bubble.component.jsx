@@ -5,29 +5,6 @@ import DeleteSingleMessageModal from "../delete-single-message-modal/delete-sing
 const ChatBubble = ({ message, isSender }) => {
   const [username, setUsername] = useState("");
   const [isClicked, setIsClicked] = useState(false);
-  const chatBubbleRef = useRef(null);
-  
-
-  const handleClickOutside = (event) => {
-    if (
-      chatBubbleRef.current &&
-      !chatBubbleRef.current.contains(event.target)
-    ) {
-      setIsClicked(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isClicked) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isClicked]);
 
   useEffect(() => {
     const getUsername = async () => {
@@ -46,7 +23,10 @@ const ChatBubble = ({ message, isSender }) => {
 
   const handleEnter = () => {
     setIsClicked(true);
-    console.log({ isClicked });
+  };
+
+  const handleLeave = () => {
+    setIsClicked(false);
   };
 
   return (
@@ -55,8 +35,9 @@ const ChatBubble = ({ message, isSender }) => {
         className={`chat w-full flex items-center ${
           isSender ? "chat-end justify-end" : "chat-start"
         }`}
+        onMouseLeave={handleLeave}
       >
-        {isClicked && isSender && <DeleteSingleMessageModal messageId={message.id} className={""}/>}
+        {isClicked && isSender && <DeleteSingleMessageModal messageId={message.id}/>}
         <div className={`${isSender && "flex flex-col items-end pr-4 "}`}>
           <div className="chat-header ml-4">{username}</div>
           <div className="chat-bubble bg-black items-center ml-4 " onMouseEnter={handleEnter}>
@@ -66,7 +47,7 @@ const ChatBubble = ({ message, isSender }) => {
             {formatDateForDisplay(message.date)}
           </time>
         </div>
-        {isClicked && !isSender && <DeleteSingleMessageModal messageId={message.id} className={""} />}
+        {isClicked && !isSender && <DeleteSingleMessageModal messageId={message.id}/>}
       </div>
     </div>
   );

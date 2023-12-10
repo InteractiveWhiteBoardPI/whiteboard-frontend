@@ -19,7 +19,6 @@ export const ChatProvider = ({ children }) => {
       try {
         const response = await fetch(`http://localhost:8080/message/all/${currentUser.uid}`)
         const jsonData = await response.json()
-        console.log({ jsonData })
         setMessages(jsonData)
       } catch (error) {
         console.log({ error })

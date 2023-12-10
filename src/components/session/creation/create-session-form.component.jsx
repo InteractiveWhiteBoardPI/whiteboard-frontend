@@ -36,7 +36,6 @@ const CreationSessionForm = () => {
         }),
       });
       if(response.status === 201) {
-        console.log(response)
         const json = await response.json()
         if(json){
           setSession(json)

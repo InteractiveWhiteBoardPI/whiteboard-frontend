@@ -26,7 +26,7 @@ const MessagesList = ({ user, currentUser }) => {
     <div className="flex flex-col h-full items-center max-h-full overflow-y-auto overflow-x-hidden">
       {messages.map((msg, index) => (
           <ChatBubble
-          key={index}
+          key={msg.id}
             isSender={msg.sender === currentUser}
             message={msg}
           />

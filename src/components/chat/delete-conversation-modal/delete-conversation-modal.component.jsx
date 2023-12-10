@@ -8,7 +8,7 @@ const DeleteConversationModal = () => {
 
     const { currentUser } = useUserContext();
     const { setMessages, chosenUser } = UseChatContext();
-    const [closeModal, setCloseModal] = useState(false)
+    const [closeModal, setCloseModal] = useState('off')
 
     const handleDelete = async () => {
         await fetch(
@@ -22,6 +22,7 @@ const DeleteConversationModal = () => {
             .filter(message => message.sender===currentUser.uid && message.receiver=== chosenUser.uid)
             .filter(message => message.receiver===currentUser.uid && message.sender=== chosenUser.uid)
         )
+        setCloseModal('off')
     };
 
     const closeModalFunc = (event) =>{
@@ -29,7 +30,7 @@ const DeleteConversationModal = () => {
     }
 
   return(
-      <div className="">
+      <div>
           <label htmlFor="conversation-deletion-modal" className="cursor-pointer flex items-center hover:bg-black hover:bg-opacity-60 bg-opacity-60 overflow-hidden">
               <HiOutlineTrash className="mr-2"/>
              <div>Clear conversation</div>
