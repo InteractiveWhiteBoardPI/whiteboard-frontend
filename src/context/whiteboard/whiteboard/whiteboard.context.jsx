@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import useUserContext from "../../user/useUserContext";
 
 export const WhiteboardContext = createContext({})
 
@@ -8,7 +9,7 @@ export const CURSOR_MODES = {
     grabing: "cursor-grabbing",
 }
 
-export const WhiteboardProvider = ({toggleExpansion, children }) => {
+export const WhiteboardProvider = ({ toggleExpansion, whiteboardData, setWhiteboardData ,children }) => {
     const [canvas, setCanvas] = useState(null)
     const [context, setContext] = useState(null)
     const [boundaries, setBoundaries] = useState(null)
@@ -17,7 +18,34 @@ export const WhiteboardProvider = ({toggleExpansion, children }) => {
     const [currentZoom , setCurrentZoom ] = useState(1)
     const [isBucket, setIsBucket ] = useState(false)
     const [bucketColor, setBucketColor ] = useState("#FFFFFF")
+
+    useEffect(
+        () => {
+            if(context && whiteboardData){
+                const image = new Image()
+                image.src = whiteboardData.data
+
+                image.onload = () => {
+                    context.drawImage(image, 0, 0)
+                }
+            }
+        }, [whiteboardData, context]
+    )
+
+    useEffect(
+        () => {
+            if(canvas){
+                const data = canvas?.toDataURL()
+                setWhiteboardData(prev => ({
+                    ...prev,
+                    data,
+                    lastModified:  new Date().toISOString().split("T")[0],
     
+                }))
+            }
+        } , [ movesArray ]
+    )
+
     useEffect(
         () => {
             setContext(canvas?.getContext('2d'))
@@ -39,10 +67,16 @@ export const WhiteboardProvider = ({toggleExpansion, children }) => {
         setIsBucket(false)
         setCurrentMode(CURSOR_MODES.grabing)
     }
-
     const setToBucket = () => {
         setIsBucket(true)
         setCurrentMode(CURSOR_MODES.crosshair)
+    }
+
+    const setWhiteboardName = (name) => {
+        setWhiteboardData(prev => ({
+            ...prev,
+            name
+        }))
     }
 
     const value = {
@@ -62,7 +96,9 @@ export const WhiteboardProvider = ({toggleExpansion, children }) => {
         setToBucket,
         isBucket,
         bucketColor,
-        setBucketColor
+        setBucketColor,
+        whiteboardData,
+        setWhiteboardName,
     }
 
     return <WhiteboardContext.Provider value={value}>{children}</WhiteboardContext.Provider>

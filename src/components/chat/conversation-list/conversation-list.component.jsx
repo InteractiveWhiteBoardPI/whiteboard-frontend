@@ -11,16 +11,22 @@ const ConversationList = () => {
         () => {
             if (groupedMessages) {
                 const keys = Object.keys(groupedMessages)
-                keys.forEach(user => {
-                    if(user === currentUser.uid) return
-                    setConversations(prev => {
-                        const userMessages = groupedMessages[user]
-                        return {
-                            ...prev, 
-                            [user]: userMessages[userMessages.length - 1]
-                        }
+                if(keys.length) {
+                    keys.forEach(user => {
+                        if(user === currentUser?.uid) return
+                        setConversations(prev => {
+                            const userMessages = groupedMessages[user]
+                            return {
+                                ...prev, 
+                                [user]: userMessages[userMessages.length - 1]
+                            }
+                        })
                     })
-                })
+                } else {
+                    setConversations({})
+                }
+            } else {
+                setConversations({})
             }
         }, [groupedMessages]
     )

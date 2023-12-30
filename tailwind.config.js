@@ -41,6 +41,7 @@ module.exports = {
       {
         mytheme: {
           "base-100": "#767676",
+          "error" : "#dc2626"
         },
       },
     ],

@@ -35,5 +35,7 @@ class Socket {
     }
   }
 }
+const socket = new Socket()
+socket.connect()
 
-export default new Socket();
+export default socket
