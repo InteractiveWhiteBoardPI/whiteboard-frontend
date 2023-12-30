@@ -11,6 +11,7 @@ const CreationSessionForm = () => {
     name: "",
     password: "",
   })
+
   const { currentUser } = useUserContext()
   const { setSession } = useSessionContext()
   const navigate = useNavigate()
@@ -37,8 +38,6 @@ const CreationSessionForm = () => {
       const json = await response.json()
 
       setSession(json)
-
-
       console.log(json)
     } catch (error) {
       console.error("Error:", error);

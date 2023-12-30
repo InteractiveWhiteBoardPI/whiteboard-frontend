@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        'maven-pro': ['Maven Pro', 'sans-serif'],
+      },
       colors: {
         "light-clr-10": "rgba(255, 255, 255, 0.1)",
         "light-clr-20": "rgba(255, 255, 255, 0.2)",
