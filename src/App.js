@@ -25,7 +25,6 @@ const App = () => {
                 uid,
                 username: displayName || email.split("@")[0],
             });
-            //navigate("/home")
         };
         sub();
     }, []);

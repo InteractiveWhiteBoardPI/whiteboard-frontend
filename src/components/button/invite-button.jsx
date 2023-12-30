@@ -1,33 +1,17 @@
 import React, {useRef} from "react";
 import {useState} from "react";
 import { toast } from 'react-toastify';
+import InviteMenu from "./InviteMenu";
+import useUserContext from "../../context/user/useUserContext";
+import useSessionContext from "../../context/session/useSessionContext";
 
 export default function InviteButton({ sessionId }) {
     const [showOptions, setShowOptions] = useState(false);
-    const [session,setSession] = useState({sessionId})
-    const [copySuccess, setCopySuccess] = useState(false);
-    const sessionIdRef = useRef(null);
+
     const handleButtonClick = () => {
         setShowOptions(!showOptions);
     };
 
-
-    const handleInviteClick = () => {
-        toast("Hello!");
-        setShowOptions(false);
-    };
-
-    const handleCopyLinkClick = () => {
-        sessionIdRef.current.select();
-        sessionIdRef.current.setSelectionRange(0, 99999);
-
-        document.execCommand('copy');
-
-        setCopySuccess(true);
-        setTimeout(() => {
-            setCopySuccess(false);
-        }, 1500);
-    };
 
     return (
         <div>
@@ -38,7 +22,7 @@ export default function InviteButton({ sessionId }) {
             </button>
 
             {showOptions && (
-                <InviteButton></InviteButton>
+                <InviteMenu sessionId={sessionId} handleButtonClick={handleButtonClick}></InviteMenu>
             )}
         </div>
     );

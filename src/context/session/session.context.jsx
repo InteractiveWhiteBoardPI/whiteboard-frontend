@@ -9,7 +9,8 @@ const INITIAL_STATE = {
     uid : "",
     id: "",
     password: "",
-    host : {}
+    host : {},
+    members:[]
 }
 export const SessionProvider = ({ children }) => {
     const [session , setSession] = useState(INITIAL_STATE)

@@ -11,11 +11,8 @@ const CreationSessionForm = () => {
     name: "",
     password: "",
   })
-<<<<<<< HEAD
 
-=======
   const [errorMessage, setErrorMessage] = useState(null);
->>>>>>> d9668a5f7740115011857a65b471d4791b1942ba
   const { currentUser } = useUserContext()
   const { setSession } = useSessionContext()
   const navigate = useNavigate()
@@ -44,18 +41,15 @@ const CreationSessionForm = () => {
         if(json){
           setSession(json)
 
-<<<<<<< HEAD
       const json = await response.json()
 
       setSession(json)
       console.log(json)
-=======
           navigate("/home/create-session/copy-link")
         }
       } else {
         setErrorMessage("Could not create session")
       }
->>>>>>> d9668a5f7740115011857a65b471d4791b1942ba
     } catch (error) {
       console.error("Error:", error);
     }
