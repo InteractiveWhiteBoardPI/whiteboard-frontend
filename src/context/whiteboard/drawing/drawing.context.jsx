@@ -1,15 +1,34 @@
 import { createContext, useEffect, useState } from "react";
 import useWhiteboardContext from "../whiteboard/useWhiteboardContext";
-import usePanningContext from "../panning/usePanningContext";
-
+import useUserContext from "../../user/useUserContext";
+import useSessionContext from "../../session/useSessionContext";
+import { v4 as UUID } from "uuid";
+import socket from "../../../utils/Socket";
 export const DrawingContext = createContext({})
 
 export const DrawingProvider = ({ children }) => {
-    const { context, boundaries, movesArray, setMovesArray, currentZoom, bucketColor, setBucketColor } = useWhiteboardContext()
-    const { offset } = usePanningContext();
+    const {
+        context,
+        boundaries,
+        movesArray,
+        setMovesArray,
+        currentZoom,
+        bucketColor,
+        setBucketColor,
+        offset,
+    } = useWhiteboardContext()
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [lineColor, setLineColor] = useState("#000000")
     const [lineWidth, setLineWidth] = useState(1)
+    const { currentUser } = useUserContext()
+    const { session } = useSessionContext()
+
+
+    useEffect(
+        () => {
+            socket.connect()
+        }, [socket.connected]
+    )
 
     let currentArray = [];
 
@@ -23,52 +42,51 @@ export const DrawingProvider = ({ children }) => {
     const clearCanvas = () => {
         if (context) {
             context.fillStyle = bucketColor
-            context.fillRect(0,0, boundaries.width,boundaries.height)
+            context.fillRect(0, 0, boundaries.width, boundaries.height)
         }
     }
 
-    const applyBucket = () => {
-        if(context) {
+    const applyBucket = (isInteractive) => {
+        if (context) {
+            const lineId = UUID()
             setMovesArray([...movesArray, {
-                isBucket : true,
+                id : lineId,
+                isBucket: true,
                 bkColor: bucketColor,
-                color : null,
-                positions : null , 
-                width : null
+                color: null,
+                positions: null,
+                width: null
             }])
+            if(isInteractive) {
+                console.log("sending bucket")
+                socket.send("/app/whiteboard/draw", JSON.stringify(
+                    {
+                        bucket: true,
+                        bkColor: bucketColor,
+                        color: "",
+                        positions: [],
+                        width: 0,
+                        session,
+                        lineOffset: offset,
+                        id: lineId
+                    }
+                ))
+            }
             clearCanvas()
         }
     }
 
-    const restorePrevious = () => {
-        clearCanvas()
-        for (let i = 0; i < movesArray.length - 1; i++) {
-            const { positions, color, width, isBucket, bkColor } = movesArray[i]
-            if(isBucket) {
-                context.fillStyle = bkColor
-                context.fillRect(0,0, boundaries.width,boundaries.height)
-                setBucketColor(bkColor)
-            } else {
-                
-                if(bkColor !== movesArray[i+1].bkColor){
-                    
-                    context.fillStyle = bkColor
-                    context.fillRect(0,0, boundaries.width,boundaries.height)
-                    setBucketColor(bkColor)
-                }
-                for (let j = 1; j < positions.length; j++) {
-                    context.beginPath();
-                    context.moveTo(positions[j - 1].x - offset.x, positions[j - 1].y - offset.y)
-                    context.lineWidth = width
-                    context.strokeStyle = color
-                    context.lineCap = 'round'
-    
-                    context.lineTo(positions[j].x - offset.x, positions[j].y - offset.y)
-                    context.stroke();
-                }
-            }
+    const restorePrevious = (isInteractive) => {
+        if(movesArray.length === 0) return
+        if(isInteractive) {
+            socket.send("/app/whiteboard/prev", JSON.stringify({
+                ...movesArray[movesArray.length - 1],
+                session,
+                user: currentUser,
+            }))
+        } else {
+            setMovesArray(prev => prev.filter((_, i) => i !== prev.length - 1))
         }
-        setMovesArray(prev => prev.filter((_, i) => i !== prev.length - 1))
     }
 
     const startDrawing = (e) => {
@@ -90,21 +108,32 @@ export const DrawingProvider = ({ children }) => {
         }
     }
 
-    useEffect(() => {
-        
-    },[movesArray])
-
-    const stopDrawing = () => {
+    const stopDrawing = (isInteractive) => {
         setIsMouseDown(false)
         context.closePath();
-        setMovesArray([...movesArray, 
-            { 
-                positions: currentArray, 
-                color: lineColor, 
-                width : lineWidth, 
-                bkColor: bucketColor,
-                isBucket : false 
-            }])
+        const lineId = UUID()
+        setMovesArray([...movesArray, {
+            id: lineId,
+            positions: currentArray,
+            color: lineColor,
+            width: lineWidth,
+            bkColor: bucketColor,
+            isBucket: false
+        }])
+        if (isInteractive) {
+            socket.send("/app/whiteboard/draw", JSON.stringify(
+                {
+                    positions: currentArray,
+                    color: lineColor,
+                    width: lineWidth,
+                    bkColor: bucketColor,
+                    bucket: false,
+                    session,
+                    lineOffset: offset,
+                    id: lineId
+                }
+            ))
+        }
         currentArray = [];
     }
 

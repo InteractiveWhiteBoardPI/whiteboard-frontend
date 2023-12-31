@@ -1,5 +1,5 @@
-import CallSection from "../call-section/call-section.component"
-import SessionMenu from "../session-menu/session-menu.component";
+import CallSection from "../components/session/call-section/call-section.component"
+import SessionMenu from "../components/session/session-menu/session-menu.component";
 
 const SessionBody = () => {
     return (

@@ -1,22 +1,20 @@
 import ControlMenu from "../components/session/control-menu/control-menu.component";
-import SessionBody from "../components/session/session-body/session-body.component";
 import {useEffect} from "react";
-import useSessionContext from "../context/session/useSessionContext";
-import {useLocation} from "react-router-dom";
+import {Outlet, useParams} from "react-router-dom";
 
 const SessionCreated = () => {
-    const location = useLocation()
+  const { id} = useParams()
   useEffect(
       () => {
-          fetch("http://localhost:8080/session/get-members/"+location.pathname.split("/session/")[1])
+          fetch("http://localhost:8080/session/get-members/"+id)
               .then(response => response.json())
               .then(json => console.log(json))
-      }, [location.pathname]
+      }, [id]
   )
 
   return (
     <div className="flex flex-col items-center justify-center h-screen p-6 gap-10">
-      <SessionBody />
+      <Outlet />
 
       <ControlMenu />
     </div>

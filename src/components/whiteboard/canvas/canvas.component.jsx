@@ -5,13 +5,14 @@ import useWhiteboardContext from "../../../context/whiteboard/whiteboard/useWhit
 import usePanningContext from "../../../context/whiteboard/panning/usePanningContext";
 import { CURSOR_MODES } from "../../../context/whiteboard/whiteboard/whiteboard.context";
 
-const Canvas = ({ toggleExpansion, isExpanded }) => {
+const Canvas = ({ isInteractive = false }) => {
     const canvas = useRef()
     const { 
         setCanvas,
         boundaries,
         currentMode,
-        isBucket
+        isBucket,
+        isExpanded
     } = useWhiteboardContext()
     const { 
         startDrawing, 
@@ -32,7 +33,7 @@ const Canvas = ({ toggleExpansion, isExpanded }) => {
     
     const handleMouseDown = (e) => {
         if(isBucket) {
-            applyBucket()
+            applyBucket(isInteractive)
             return
         }
         if(currentMode === CURSOR_MODES.crosshair) {
@@ -54,7 +55,7 @@ const Canvas = ({ toggleExpansion, isExpanded }) => {
     const handleMouseUp = () => {
         if(isBucket) return
         if(currentMode === CURSOR_MODES.crosshair) {
-            stopDrawing() 
+            stopDrawing(isInteractive) 
         } else {
             stopDragging()
         }
@@ -62,9 +63,7 @@ const Canvas = ({ toggleExpansion, isExpanded }) => {
 
     return (
         <div className={`relative border w-full h-full overflow-hidden origin-top-right ${!isExpanded && "my-4 rounded-2xl"} ${currentMode}`}>
-            <WhiteboardToolbar
-                toggleExpansion={toggleExpansion}
-            />
+            <WhiteboardToolbar isInteractive={isInteractive}/>
             <canvas
                 width={boundaries?.width}
                 height={boundaries?.height}

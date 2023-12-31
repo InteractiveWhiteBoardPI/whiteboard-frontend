@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
     FaExpand,
     FaMicrophone,
@@ -9,10 +9,12 @@ import {
     FaVideoSlash,
 } from "react-icons/fa";
 import { FaDisplay, FaPhoneFlip } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 const ControlMenu = () => {
     const [micClicked, setMicClicked] = useState(false);
     const [vidClicked, setVidClicked] = useState(false);
+    const navigate = useNavigate();
 
     const handleMicClick = () => {
         setMicClicked((prevMicState) => !prevMicState);
@@ -20,6 +22,10 @@ const ControlMenu = () => {
     const handleCamClicked = () => {
         setVidClicked((prevVidState) => !prevVidState);
     };
+
+    const openWhiteboard = useCallback(() => {
+        navigate("whiteboard");
+    },[])
     return (
         <div className=" flex rounded-full w-4/6 bg-dark-clr-70 justify-between">
             <div
@@ -33,7 +39,7 @@ const ControlMenu = () => {
                 <FaExpand style={{ color: "#ffffff" }} className="text-2xl" />
             </button>
             <div className=" h-14 flex rounded-full gap-10">
-                <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
+                <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center" onClick={openWhiteboard}>
                     <FaPen style={{ color: "#ffffff" }} className="text-2xl" />
                 </button>
                 <div className="bg-black w-14 h-14 rounded-full flex justify-center items-center">

@@ -11,6 +11,8 @@ import WhiteboardViewer from "./routes/whiteboard-viewer.route";
 import Session from "./routes/session.route";
 import StarredWhiteboards from "./routes/starred-whiteboards.route";
 import JoinSession from "./routes/join-session.route";
+import InteractiveWhiteboard from "./routes/intercative-whiteboard.route";
+import SessionBody from "./routes/session-body.route";
 
 const App = () => {
   const { setCurrentUser } = useUserContext();
@@ -39,7 +41,10 @@ const App = () => {
         <Route path="create-session/*" element={<CreateSession />} />
         <Route path="chat" element={<Chat />} />
       </Route>
-      <Route path="session/*" element={<Session />} />
+      <Route path="session/:id" element={<Session />}>
+        <Route index element={<SessionBody />} />
+        <Route path="whiteboard" element={<InteractiveWhiteboard />} />
+      </Route>
       <Route path="/whiteboard/*" element={<Whiteboard />} />
     </Routes>
   );
