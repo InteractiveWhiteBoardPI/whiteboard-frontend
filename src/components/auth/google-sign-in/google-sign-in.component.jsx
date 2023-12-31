@@ -2,11 +2,15 @@ import { loginInWithGoogle } from "../../../utils/firebase-utils";
 import Button from "../../button/button.component";
 import { FaGoogle } from "react-icons/fa";
 import {createContext, useContext} from "react";
+import {useNavigate} from "react-router-dom";
 
 const GoogleSignIn = () => {
 
+    let navigate = useNavigate()
+
     const handleClick = async () => {
         await loginInWithGoogle()
+        navigate("/home")
     }
     
     

@@ -19,6 +19,7 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig);
 
+
 export const auth = getAuth();
 
 export const registerUser = async (email, password) => {

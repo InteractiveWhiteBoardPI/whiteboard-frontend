@@ -31,6 +31,7 @@ const App = () => {
     return (
         <Routes>
             <Route path="/auth" element={<Auth />} />
+
             <Route path="/home" element={<Home />}>
                 <Route index element={<WhiteboardViewer />} />
                 <Route path="starred" element={<StarredWhiteboards />} />

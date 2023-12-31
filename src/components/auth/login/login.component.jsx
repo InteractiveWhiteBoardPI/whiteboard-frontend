@@ -6,7 +6,8 @@ import useUserContext from "../../../context/user/useUserContext";
 import { useNavigate } from "react-router-dom";
 
 
-const Login = () => {
+const Login = ({handleReset}) => {
+
     const { setCurrentUser } = useUserContext()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
@@ -30,7 +31,7 @@ const Login = () => {
             username: email.split("@")[0]
         })
 
-        navigate("/")
+        navigate("/home")
         
     }
     return (
@@ -51,6 +52,7 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange.bind(this, "password")}
                 />
+                <div className="font-maven-pro font-semibold text-white text-sm ml-auto mr-4 cursor-pointer hover:text-blue-800" onClick={handleReset}>Forget password?</div>
                 <Button
                     content="login"
                     onClick={handleSubmit}
