@@ -95,7 +95,7 @@ export default function InviteMenu({sessionId,handleButtonClick}) {
                                 type="text"
                                 value={sessionId}
                                 readOnly
-                                className="border-none outline-none bg-transparent w-[25vw]"
+                                className="border-none outline-none bg-transparent w-[33vw]"
                                 ref={sessionIdRef}
                             />
                         </div>

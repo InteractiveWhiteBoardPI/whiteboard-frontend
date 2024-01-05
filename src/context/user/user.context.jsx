@@ -6,6 +6,7 @@ export default UserContext
 
 export const UserProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null)
+    const [imageByte , setImageByte] = useState(null) ;
     useEffect(
         () => {
             if(currentUser){
@@ -24,12 +25,14 @@ export const UserProvider = ({ children }) => {
         }, [currentUser]
     )
 
-
-
     const value = {
-        currentUser,
-        setCurrentUser,
-    }
+      currentUser: {
+        ...currentUser,
+        imageByte
+      },
+      setCurrentUser,
+      setImageByte,
+    };
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }

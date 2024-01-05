@@ -24,7 +24,6 @@ const SessionMenu = () => {
     useEffect(() => {
         if (currentUser.uid !== session?.host.uid) {
             handleSetIsHost();
-			console.log("this is current user :",currentUser,"this is host user :",session?.host)
         }
     }, [currentUser, session?.host]);
 
@@ -35,7 +34,7 @@ const SessionMenu = () => {
                 <MenuSelector icon={<FaCommentDots/>}/>
                 <MenuSelector icon={<FaPeopleGroup/>}/>
                 <MenuSelector icon={<FaComments/>}/>
-                {isHost && (<InviteButton sessionId={"localhost:3000/session/"+session?.id}></InviteButton>)}
+                {isHost && (<InviteButton sessionId={"localhost:3000/session/"+session?.uid}></InviteButton>)}
             </div>
 
             <MenuBody />            
