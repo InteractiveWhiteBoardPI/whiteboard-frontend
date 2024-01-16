@@ -13,7 +13,7 @@ const INITIAL_STATE = {
 }
 export const SessionProvider = ({ children }) => {
     const [session , setSession] = useState(INITIAL_STATE)
-    const [memebers, setMemebers] = useState([])
+
 
     const value = {
         session,

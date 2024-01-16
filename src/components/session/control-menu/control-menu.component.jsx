@@ -8,7 +8,8 @@ import {
     FaVideo,
     FaVideoSlash,
 } from "react-icons/fa";
-import { FaDisplay, FaPhoneFlip } from "react-icons/fa6";
+import { FaDisplay } from "react-icons/fa6";
+import LeaveCall from "./leave-call.component";
 
 const ControlMenu = () => {
     const [micClicked, setMicClicked] = useState(false);
@@ -65,11 +66,9 @@ const ControlMenu = () => {
                 <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
                     <FaDisplay style={{ color: "#ffffff" }} className="text-2xl" />
                 </button>
-                <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
-                    <FaPhoneFlip style={{ color: "#FF0000" }} className="text-2xl" />
-                </button>
+                <LeaveCall/>
             </div>
-            <button className="bg-red-500 w-32 h-14 rounded-full text-white font-semibold">
+            <button className="w-32 h-14 rounded-full text-white font-semibold">
                 End Meeting
             </button>
         </div>

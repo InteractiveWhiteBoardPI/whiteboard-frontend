@@ -7,8 +7,7 @@ import {SessionProvider} from "./context/session/session.context";
 import {UserProvider} from "./context/user/user.context"
 import {BrowserRouter} from "react-router-dom";
 import {ChatProvider} from "./context/chat/chat.context";
-import {DevSupport} from "@react-buddy/ide-toolbox";
-import {ComponentPreviews, useInitial} from "./dev";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -17,11 +16,7 @@ root.render(
             <SessionProvider>
                 <ChatProvider>
                     <BrowserRouter>
-                        <DevSupport ComponentPreviews={ComponentPreviews}
-                                    useInitialHook={useInitial}
-                        >
                             <App/>
-                        </DevSupport>
                     </BrowserRouter>
                 </ChatProvider>
             </SessionProvider>
