@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
     FaExpand,
+    FaHeadphones,
     FaMicrophone,
     FaMicrophoneSlash,
     FaPen,
@@ -8,70 +9,62 @@ import {
     FaVideo,
     FaVideoSlash,
 } from "react-icons/fa";
+import { TbHeadphonesFilled,TbHeadphonesOff } from "react-icons/tb";
 import { FaDisplay, FaPhoneFlip } from "react-icons/fa6";
+import useCallContext from "../../../context/call/useCallContext";
 
 const ControlMenu = () => {
-    const [micClicked, setMicClicked] = useState(false);
-    const [vidClicked, setVidClicked] = useState(false);
-
-    const handleMicClick = () => {
-        setMicClicked((prevMicState) => !prevMicState);
-    };
-    const handleCamClicked = () => {
-        setVidClicked((prevVidState) => !prevVidState);
-    };
+    const {userMedia, toggleMedia} = useCallContext()
     return (
-        <div className=" flex rounded-full w-4/6 bg-dark-clr-70 justify-between">
-            <div
-                className="bg-cover bg-no-repeat w-14 h-14 rounded-full"
-                style={{
-                    backgroundImage:
-                        "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqrwXfuGTN059UjTXRHrkig0YZxKE2Wm2_mR0ppaPfVDG4hruRfhVhby4xpRLzgz2YE8w&usqp=CAU)",
-                }}
-            ></div>
-            <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
-                <FaExpand style={{ color: "#ffffff" }} className="text-2xl" />
-            </button>
-            <div className=" h-14 flex rounded-full gap-10">
-                <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
-                    <FaPen style={{ color: "#ffffff" }} className="text-2xl" />
-                </button>
-                <div className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
-                    <FaSmile style={{ color: "#ffffff" }} className="text-2xl" />
+        <div className="w-full h-[10%] flex items-center justify-center">
+            <div className="flex rounded-full w-4/6 bg-dark-clr-70 justify-between text-2xl text-white">
+                    <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
+                        <FaPen/>
+                    </button>
+                    <button 
+                        onClick={toggleMedia.bind(null, "mute")}
+                        className=" bg-black w-14 h-14 rounded-full flex justify-center items-center">
+                        {
+                            !userMedia.mute ? (
+                                <TbHeadphonesFilled />
+                            ) : (
+                                <TbHeadphonesOff style={{ color: "#f00" }}/>
+                            )
+                        }
+                        
+                    </button>
+                    <button
+                        className="bg-black w-14 h-14 rounded-full flex justify-center items-center"
+                        onClick={toggleMedia.bind(null, "audio")}
+                    >
+                        {userMedia.audio ? (
+                            <FaMicrophone />
+                        ) : (
+                            <FaMicrophoneSlash
+                                style={{ color: "#f00" }}
+                            />
+                        )}
+                    </button>
+                    <button
+                        className="bg-black w-14 h-14 rounded-full flex justify-center items-center"
+                        onClick={toggleMedia.bind(null, "video")}
+                    >
+                        {userMedia.video ? (
+                            <FaVideo />
+                        ) : (
+                            <FaVideoSlash style={{ color: "#f00" }}/>
+                        )}
+                    </button>
+                    <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
+                        <FaDisplay />
+                    </button>
+                    <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
+                        <FaPhoneFlip style={{ color: "#FF0000" }} />
+                    </button>
                 </div>
-                <button
-                    className="bg-black w-14 h-14 rounded-full flex justify-center items-center"
-                    onClick={handleMicClick}
-                >
-                    {micClicked ? (
-                        <FaMicrophone style={{ color: "#ffffff" }} className="text-2xl" />
-                    ) : (
-                        <FaMicrophoneSlash
-                            style={{ color: "#ffffff" }}
-                            className="text-2xl"
-                        />
-                    )}
+                <button className="bg-red-500 w-32 h-14 rounded-full text-white font-semibold">
+                    End Meeting
                 </button>
-                <button
-                    className="bg-black w-14 h-14 rounded-full flex justify-center items-center"
-                    onClick={handleCamClicked}
-                >
-                    {vidClicked ? (
-                        <FaVideo style={{ color: "#ffffff" }} className="text-2xl" />
-                    ) : (
-                        <FaVideoSlash style={{ color: "#ffffff" }} className="text-2xl" />
-                    )}
-                </button>
-                <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
-                    <FaDisplay style={{ color: "#ffffff" }} className="text-2xl" />
-                </button>
-                <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
-                    <FaPhoneFlip style={{ color: "#FF0000" }} className="text-2xl" />
-                </button>
-            </div>
-            <button className="bg-red-500 w-32 h-14 rounded-full text-white font-semibold">
-                End Meeting
-            </button>
         </div>
     );
 }
