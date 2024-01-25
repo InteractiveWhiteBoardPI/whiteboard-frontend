@@ -1,7 +1,8 @@
 import React, {useRef, useState} from 'react'
 import {toast} from "react-toastify";
 import useSessionContext from "../../context/session/useSessionContext";
-import sessionContext from "../../context/session/session.context";
+import InputField from '../input-field/input-field.component';
+import { ToastContainer } from 'react-toastify';
 
 export default function InviteMenu({sessionId,handleButtonClick}) {
 
@@ -78,6 +79,7 @@ export default function InviteMenu({sessionId,handleButtonClick}) {
     };
     return(
         <div className="rounded-[8px] fixed left-[25vw] top-[15vh] mr-auto w-[50vw] h-[70vh] z-20 bg-black bg-opacity-50 flex justify-center items-center;">
+                  <ToastContainer />
             <div className="bg-black p-8 rounded-md shadow-md grid h-[100%] w-[100%]">
                 <button className="bg-red-500 text-black border-none p-2 cursor-pointer absolute top-2 right-2" onClick={handleButtonClick}>
                     X
@@ -100,7 +102,7 @@ export default function InviteMenu({sessionId,handleButtonClick}) {
                             />
                         </div>
                         <button
-                            className="rounded-2xl border-white text-white border font-maven-pro mt-[-0.5vh] bg-opacity-85 h-[5.5vh] w-[11vw] ml-auto"
+                            className="rounded-2xl tracking-widest text-white bg-light-clr-20 p-2 text-white bg-light-clr-20 font-maven-pro mt-[-0.5vh] h-[5.5vh] w-[11vw] ml-auto"
                             onClick={handleCopyLinkClick}
                         >
                             Copy Link
@@ -113,17 +115,9 @@ export default function InviteMenu({sessionId,handleButtonClick}) {
                     <div className="font-maven-pro text-[18px] text-white font-medium leading-normal pt-[10vh] mb-[3vh] ml-[48%]">
                         OR
                     </div>
-                    <div className="flex-col w-[100%]">
-                        <div className="font-maven-pro text-[18px] text-white font-medium leading-normal">
-                            Username
-                        </div>
-                        <input className="pl-2 border border-white rounded-l bg-black mt-[2vh]"
-                               value={username}
-                               onChange={handleInputChange}
-                        />
-                    </div>
+                    <InputField label="Username" type={"text"} onChange={handleInputChange} value={username}></InputField>
                     <button>
-                        <div className="text-l font-maven-pro leading-normal font-medium border border-white w-[10vw] mt-[8vh] ml-[18vw]" onClick={handleInviteClick}>
+                        <div className="text-l font-maven-pro leading-normal font-medium tracking-widest text-white bg-light-clr-20 p-2 text-white bg-light-clr-20 w-[10vw] mt-[8vh] ml-[18vw]" onClick={handleInviteClick}>
                             Invite
                         </div>
                     </button>

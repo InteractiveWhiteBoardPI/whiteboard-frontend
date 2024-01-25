@@ -10,6 +10,7 @@ const Profile = () => {
   const [image, setImage] = useState(currentUser.imageByte);
   const [username, setUsername] = useState(currentUser.username);
   const [imageUrl, setImageUrl] = useState(null);
+  
 
 
   const handleChange = (event) => {
@@ -23,22 +24,29 @@ const Profile = () => {
 
   const update = async () => {
     if (currentUser) {
-      const formData = new FormData();
-      formData.append('file', image);
-
-      try {
-        await fetch(`http://localhost:8080/user/update-photo/${currentUser.uid}/${username}`, {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (image === null) {
+      console.log(image);
+      currentUser.username=username;
+      if (image) {
+        const formData = new FormData();
+        formData.append('image', image);
+    
+        try {
+         
+          await fetch(`http://localhost:8080/user/update-photo/${currentUser.uid}/${username}`, {
+            method: 'POST',
+            body: formData,
+          });
+        } catch (error) {
+          console.error("Error updating photo:", error);
+        }
+      } else {
+        try {
           await fetch(`http://localhost:8080/user/update-photo/${currentUser.uid}/${username}`, {
             method: 'DELETE', 
           });
+        } catch (error) {
+          console.error("Error deleting photo:", error);
         }
-      } catch (error) {
-        console.error("Error updating photo:", error);
       }
     }
   };
@@ -95,9 +103,10 @@ const Profile = () => {
                             className="w-[18vw] h-[36vh] rounded-full absolute"
                             alt="User Avatar"
                         />}
-                    <div className="mt-auto mr-auto ml-auto mb-auto flex z-10">
-                        <IoCloudUploadSharp className="text-6xl cursor-pointer text-black" onClick={handleDivClick}/>
-                        {currentUser.imageByte!=null && <IoClose className="text-6xl text-black cursor-pointer" onClick={handleXClick}/> }
+                    <div className="relative w-64 h-64 group">
+                      <img src={imageUrl} alt="Profile" className="w-[18vw] h-[36vh] rounded-full absolute" />
+                      <IoCloudUploadSharp   className={currentUser.imageByte != null ? "icon upload-icon text-6xl cursor-pointer text-white absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" : "icon upload-icon text-6xl cursor-pointer text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"} onClick={handleDivClick}/>
+                      {currentUser.imageByte!=null && <IoClose className="icon close-icon text-6xl text-white cursor-pointer absolute top-1/2 left-2/3 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" onClick={handleXClick}/> }
                     </div>
                 </div>
                 <div className="mt-[6%]">
