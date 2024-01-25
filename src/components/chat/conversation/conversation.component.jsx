@@ -78,8 +78,6 @@ const Conversation = () => {
         receiver: chosenUser.uid,
         date: formatDateForBackend(new Date()),
       };
-    } else {
-      console.log("nth to send")
     }
     try {
       const response = await fetch(`http://localhost:8080/message/save${isFileMessage ? '/file' : ''}`, {

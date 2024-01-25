@@ -5,16 +5,15 @@ const SessionContext = createContext({})
 export default SessionContext
 
 
-const INITIAL_STATE = {
+export const INITIAL_SESSION = {
     uid : "",
     id: "",
     password: "",
     host : {}
 }
 export const SessionProvider = ({ children }) => {
-    const [session , setSession] = useState(INITIAL_STATE)
-
-
+    const [session , setSession] = useState(INITIAL_SESSION)
+    
     const value = {
         session,
         setSession

@@ -1,49 +1,64 @@
 import { createContext, useEffect, useState } from "react";
-import useUserContext from "../../user/useUserContext";
 
 export const WhiteboardContext = createContext({})
 
 export const CURSOR_MODES = {
-    crosshair : "cursor-crosshair",
-    hand : "cursor-grab",
+    crosshair: "cursor-crosshair",
+    hand: "cursor-grab",
     grabing: "cursor-grabbing",
 }
 
-export const WhiteboardProvider = ({ toggleExpansion, whiteboardData, setWhiteboardData ,children }) => {
+export const WhiteboardProvider = ({ children }) => {
+    const [whiteboardData, setWhiteboardData] = useState(null)
+    const [isExpanded, setIsExpanded] = useState(false)
     const [canvas, setCanvas] = useState(null)
     const [context, setContext] = useState(null)
     const [boundaries, setBoundaries] = useState(null)
     const [movesArray, setMovesArray] = useState([]);
     const [currentMode, setCurrentMode] = useState(CURSOR_MODES.crosshair)
-    const [currentZoom , setCurrentZoom ] = useState(1)
-    const [isBucket, setIsBucket ] = useState(false)
-    const [bucketColor, setBucketColor ] = useState("#FFFFFF")
+    const [currentZoom, setCurrentZoom] = useState(1)
+    const [isBucket, setIsBucket] = useState(false)
+    const [bucketColor, setBucketColor] = useState("#FFFFFF")
+    const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+    const toggleExpansion = () => {
+        setIsExpanded(prev => !prev)
+    }
 
     useEffect(
         () => {
-            if(context && whiteboardData){
-                const image = new Image()
-                image.src = whiteboardData.data
-
-                image.onload = () => {
-                    context.drawImage(image, 0, 0)
+            if (whiteboardData) {
+                const data = whiteboardData.data
+                if (data === "") return
+                    const decodedData = JSON.parse(atob(data))
+                if (decodedData.length !== movesArray.length) {
+                    setMovesArray([...decodedData])
                 }
+            } else {
+                setMovesArray([])
             }
-        }, [whiteboardData, context]
+        }, [whiteboardData]
+    )
+    useEffect(
+        () => {
+            if (!canvas) return
+            const data = new TextEncoder().encode(JSON.stringify(movesArray))
+
+            setWhiteboardData(prev => ({
+                ...prev,
+                data: btoa(String.fromCharCode.apply(null, data)),
+                lastModified: new Date().toISOString().split("T")[0],
+            }));
+
+            drawCanvas()
+        }, [movesArray]
     )
 
     useEffect(
         () => {
-            if(canvas){
-                const data = canvas?.toDataURL()
-                setWhiteboardData(prev => ({
-                    ...prev,
-                    data,
-                    lastModified:  new Date().toISOString().split("T")[0],
-    
-                }))
-            }
-        } , [ movesArray ]
+            if (!context) return
+            drawCanvas()
+        }, [movesArray, context]
     )
 
     useEffect(
@@ -54,7 +69,43 @@ export const WhiteboardProvider = ({ toggleExpansion, whiteboardData, setWhitebo
                 () => setBoundaries(canvas?.getBoundingClientRect()))
         }, [canvas]
     )
-    
+
+    const clearCanvas = () => {
+        if (context) {
+            context.fillStyle = bucketColor
+            context.fillRect(0, 0, boundaries.width, boundaries.height)
+        }
+    }
+
+    const drawCanvas = () => {
+        clearCanvas()
+        if (!context) return
+        for (let i = 0; i < movesArray.length; i++) {
+            const { positions, color, width, isBucket, bkColor } = movesArray[i]
+            if (isBucket) {
+                context.fillStyle = bkColor
+                context.fillRect(0, 0, boundaries.width, boundaries.height)
+                setBucketColor(bkColor)
+            } else {
+                if (movesArray[i + 1] && bkColor !== movesArray[i + 1].bkColor) {
+                    context.fillStyle = bkColor
+                    context.fillRect(0, 0, boundaries.width, boundaries.height)
+                    setBucketColor(bkColor)
+                }
+                for (let j = 1; j < positions.length; j++) {
+                    context.beginPath();
+                    context.moveTo(positions[j - 1].x - offset.x, positions[j - 1].y - offset.y)
+                    context.lineWidth = width
+                    context.strokeStyle = color
+                    context.lineCap = 'round'
+
+                    context.lineTo(positions[j].x - offset.x, positions[j].y - offset.y)
+                    context.stroke();
+                }
+            }
+        }
+    }
+
     const setToDrawing = () => {
         setIsBucket(false)
         setCurrentMode(CURSOR_MODES.crosshair)
@@ -89,9 +140,9 @@ export const WhiteboardProvider = ({ toggleExpansion, whiteboardData, setWhitebo
         setToDrawing,
         setToGrab,
         setToGrabbing,
-        movesArray, 
+        movesArray,
         setMovesArray,
-        currentZoom, 
+        currentZoom,
         setCurrentZoom,
         setToBucket,
         isBucket,
@@ -99,6 +150,11 @@ export const WhiteboardProvider = ({ toggleExpansion, whiteboardData, setWhitebo
         setBucketColor,
         whiteboardData,
         setWhiteboardName,
+        drawCanvas,
+        offset,
+        setOffset,
+        isExpanded,
+        setWhiteboardData,
     }
 
     return <WhiteboardContext.Provider value={value}>{children}</WhiteboardContext.Provider>

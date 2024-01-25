@@ -16,7 +16,7 @@ const Auth = () => {
   const toggleTitles = () => {
     if (!isRegistrationView) {
       setBigTitle("Welcome back!");
-      setSmallTitle("Please sign in with your account's informations :");;
+      setSmallTitle("Please sign in with your account's informations :");
     } else {
       setBigTitle("New user ? Hello!");
       setSmallTitle("Please enter your personal informations to sign up :");

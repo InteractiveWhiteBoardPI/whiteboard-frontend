@@ -18,13 +18,13 @@ export const ChatProvider = ({ children }) => {
   }, [messages]);
 
   useEffect(() => {
+    if (!currentUser) return;
     const fetchMessages = async () => {
       try {
         const response = await fetch(`http://localhost:8080/message/all/${currentUser.uid}`)
         const jsonData = await response.json()
         setMessages(jsonData)
       } catch (error) {
-        console.log({ error })
       }
     }
 
@@ -34,21 +34,19 @@ export const ChatProvider = ({ children }) => {
 
   useEffect(() => {
 
-    if(!session) return
+    if(!session.uid) return
     const fetchSessionMessages = async () => {
       try {
         const response = await fetch(`http://localhost:8080/message/session/${session.uid}`)
         const jsonData = await response.json()
         setSessionMessages(jsonData)
       } catch (error) {
-        console.log({ error })
       }
     }
 
     fetchSessionMessages();
   }, [session]);
-  console.log({sessionMessages})
-
+  
   const value = {
     sessionMessages,
     setSessionMessages,

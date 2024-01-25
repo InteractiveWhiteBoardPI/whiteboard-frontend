@@ -8,7 +8,7 @@ const UseChatContext = () => {
         setSessionMessages,
         setMessages,
         chosenUser, 
-        setChosenUser
+        setChosenUser,
     } = useContext(ChatContext)
 
     return {
@@ -17,7 +17,7 @@ const UseChatContext = () => {
         setSessionMessages,
         setMessages,
         chosenUser, 
-        setChosenUser
+        setChosenUser,
     }
 }
  

@@ -1,22 +1,34 @@
 import ControlMenu from "../components/session/control-menu/control-menu.component";
-import SessionBody from "../components/session/session-body/session-body.component";
-import {useEffect} from "react";
+import { useEffect } from "react";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import useSessionContext from "../context/session/useSessionContext";
-import {useLocation} from "react-router-dom";
 
 const SessionCreated = () => {
-    const location = useLocation()
+  const {session, setSession} = useSessionContext()
+  const { id } = useParams()
+  const navigate = useNavigate()
+
   useEffect(
-      () => {
-          fetch("http://localhost:8080/session/get-members/"+location.pathname.split("/session/")[1])
-              .then(response => response.json())
-              .then(json => console.log(json))
-      }, [location.pathname]
+    () => {
+      if (!id) return navigate("/home")
+      if (session.uid) return
+      const getSession = async () => {
+        try {
+          const res = await fetch(`http://localhost:8080/session/get/${id}`)
+          if (!res.ok) return navigate("/home")
+          const data = await res.json()
+          setSession(data)
+        } catch (err) {
+          navigate("/home")
+        }
+      }
+      getSession()
+    }, []
   )
 
   return (
     <div className="flex flex-col items-center justify-center h-screen p-6 gap-10">
-      <SessionBody />
+      <Outlet />
 
       <ControlMenu />
     </div>
