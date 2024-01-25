@@ -6,6 +6,8 @@ import {
     FaVideo,
     FaVideoSlash,
 } from "react-icons/fa";
+
+import LeaveCall from "./leave-call.component";
 import { TbHeadphonesFilled,TbHeadphonesOff } from "react-icons/tb";
 import { FaDisplay, FaPhoneFlip } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
@@ -64,9 +66,7 @@ const ControlMenu = () => {
                     <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
                         <FaDisplay />
                     </button>
-                    <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
-                        <FaPhoneFlip style={{ color: "#FF0000" }} />
-                    </button>
+                <LeaveCall/>
                 </div>
                 <button className="bg-red-500 w-32 h-14 rounded-full text-white font-semibold">
                     End Meeting

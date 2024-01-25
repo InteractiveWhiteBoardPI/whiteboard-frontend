@@ -22,10 +22,9 @@ const ConversationName = ({ user, message }) => {
         
 
         const json = await res.json()
-
         setFullUserData(json)
       }
-      getUser()
+      getUser();
     }, [ user ]
   )
 

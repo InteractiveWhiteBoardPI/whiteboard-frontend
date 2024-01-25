@@ -22,8 +22,8 @@ const CallSection = () => {
 
   useEffect(
     () => {
-      if (!session || !currentUser) return
-      initializeCall(session.id, currentUser.uid)
+      if (!session.uid || !currentUser) return
+      initializeCall(session.uid, currentUser.uid)
     }, [session, currentUser]
   )
 

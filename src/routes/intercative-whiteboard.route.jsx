@@ -15,7 +15,6 @@ const InteractiveWhiteboard = () => {
             }
             const handlePrevRequest = ({body}) => {
                 const message = JSON.parse(body)
-                console.log("prev request", message)
                 setMovesArray(prev => prev.filter(line => line.id !== message.id))
             }
             const fetchWhiteboardData = async () => {

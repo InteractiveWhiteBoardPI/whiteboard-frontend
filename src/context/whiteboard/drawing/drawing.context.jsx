@@ -58,7 +58,6 @@ export const DrawingProvider = ({ children }) => {
                 width: null
             }])
             if(isInteractive) {
-                console.log("sending bucket")
                 socket.send("/app/whiteboard/draw", JSON.stringify(
                     {
                         bucket: true,
