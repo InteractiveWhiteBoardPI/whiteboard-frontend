@@ -9,29 +9,14 @@ export const PanningProvider = ({ children }) => {
         boundaries,
         setToGrab,
         setToGrabbing,
-        bucketColor,
-        whiteboardData
+        drawCanvas,
+        offset,
+        setOffset
     } = useWhiteboardContext()
     const [isDragging, setIsDragging,] = useState(false)
     const [startPosition, setStartPosition] = useState({ x: 0, y: 0 })
-    const [offset, setOffset] = useState({ x: 0, y: 0 });
-
-    const clearCanvas = () => {
-        if (context) {
-            context.fillStyle = bucketColor
-            context.fillRect(0,0, boundaries.width,boundaries.height)
-        }
-    }
     useEffect(() => {
         if (context) {
-            clearCanvas()
-            const drawCanvas = () => {
-                const image = new Image()
-                image.src = whiteboardData.data
-                image.onload = () => {
-                    context.drawImage(image,-offset.x, -offset.y)
-                }
-            }
             drawCanvas()
         }
     }, [offset]);
@@ -62,6 +47,7 @@ export const PanningProvider = ({ children }) => {
 
     const stopDragging = () => {
         setIsDragging(false);
+
         setToGrab()
     };
 

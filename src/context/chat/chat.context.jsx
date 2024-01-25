@@ -15,6 +15,7 @@ export const ChatProvider = ({ children }) => {
   }, [messages]);
 
   useEffect(() => {
+    if (!currentUser) return;
     const fetchMessages = async () => {
       try {
         const response = await fetch(`http://localhost:8080/message/all/${currentUser.uid}`)
