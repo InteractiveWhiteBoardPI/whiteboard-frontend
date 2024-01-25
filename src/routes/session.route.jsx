@@ -1,15 +1,29 @@
 import ControlMenu from "../components/session/control-menu/control-menu.component";
-import {useEffect} from "react";
-import {Outlet, useParams} from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
+import useSessionContext from "../context/session/useSessionContext";
 
 const SessionCreated = () => {
-  const { id} = useParams()
+  const {session, setSession} = useSessionContext()
+  const { id } = useParams()
+  const navigate = useNavigate()
+
   useEffect(
-      () => {
-          fetch("http://localhost:8080/session/get-members/"+id)
-              .then(response => response.json())
-              .then(json => console.log(json))
-      }, [id]
+    () => {
+      if (!id) return navigate("/home")
+      if (session.uid) return
+      const getSession = async () => {
+        try {
+          const res = await fetch(`http://localhost:8080/session/get/${id}`)
+          if (!res.ok) return navigate("/home")
+          const data = await res.json()
+          setSession(data)
+        } catch (err) {
+          navigate("/home")
+        }
+      }
+      getSession()
+    }, []
   )
 
   return (

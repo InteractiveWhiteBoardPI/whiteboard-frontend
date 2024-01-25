@@ -3,9 +3,11 @@ import SessionMenu from "../components/session/session-menu/session-menu.compone
 
 const SessionBody = () => {
     return (
-        <div className="h-5/6 w-[90%] rounded-2xl flex bg-dark-clr-70 justify-between">
-            <CallSection />
-            <SessionMenu />
+        <div className="h-[90%] w-full pt-2 px-4">
+            <div className="w-full h-full rounded-2xl flex bg-dark-clr-70 justify-between">
+                <CallSection />
+                <SessionMenu />
+            </div>
         </div>
     );
 }
