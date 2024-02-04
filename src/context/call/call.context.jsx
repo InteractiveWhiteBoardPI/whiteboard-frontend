@@ -19,6 +19,10 @@ export const CallProvider = ({ children }) => {
     const [myStream, setMyStream] = useState(null);
     const [calls, setCalls] = useState({});
     const peerRef = useRef();
+    const [screenSharing, setScreenSharing] = useState(false);
+   
+
+  
 
     useEffect(() => {
         if (!currentUser) return;
@@ -61,11 +65,15 @@ export const CallProvider = ({ children }) => {
         if (!myStream) return;
         setMyStream(prev => {
             const videoTrack = prev.getVideoTracks()[0];
-            videoTrack.enabled = userMedia.video;
-
+            if (videoTrack) {
+                videoTrack.enabled = userMedia.video;
+            }
+    
             const audioTrack = prev.getAudioTracks()[0];
-            audioTrack.enabled = userMedia.audio;
-
+            if (audioTrack) {
+                audioTrack.enabled = userMedia.audio;
+            }
+    
             return prev;
         })
         Object.keys(calls).forEach((userId) => {
@@ -73,8 +81,26 @@ export const CallProvider = ({ children }) => {
         })
     }, [userMedia]);
 
+    useEffect(() => {
+  
+        const supportsWeb = navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
+    
+        if (!supportsWeb) {
+          setUserMedia((prev) => ({
+            ...prev,
+            video: false,
+            audio: false,
+            mute: true,
+          }));
+        }
+      }, []);
+
     const initializeCall = (sessionId, currentUserId) => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        const getUserMediaConfig = screenSharing
+            ? { video: { mediaSource: "screen" }, audio: true }
+            : { video: true, audio: true };
+
+        navigator.mediaDevices.getUserMedia(getUserMediaConfig)
             .then((stream) => {
                 setMyStream(stream);
                 const peer = new Peer(currentUserId);
@@ -104,7 +130,6 @@ export const CallProvider = ({ children }) => {
                         ...prev,
                         [call.peer]: call
                     }))
-
                 })
 
                 peer.on("open", id => {
@@ -118,14 +143,14 @@ export const CallProvider = ({ children }) => {
                 peer.call(currentUserId, stream)
 
                 peerRef.current = peer;
-            }).catch((err) => {
+            })
+            .catch((err) => {
                 console.log("Error getting user media", err);
                 setUserMedia({
                     video: false,
                     audio: false,
                 })
             })
-
     };
 
     const handleNewUserConnection = (userId, stream) => {
@@ -151,6 +176,7 @@ export const CallProvider = ({ children }) => {
         }))
     };
 
+
     const leaveCall = (userId, sessionId) => {
         peerRef.current.disconnect();
         if (myStream) {
@@ -167,13 +193,69 @@ export const CallProvider = ({ children }) => {
         })
         socket.clearSubscriptions();
         socket.send(`/app/session/user-leave/${sessionId}`, userId);
-    }
-    const toggleMedia = (type) => {
-        setUserMedia(prev => ({
+    };
+
+
+    const toggleMedia = async (type) => {
+        setUserMedia((prev) => ({
             ...prev,
-            [type]: !prev[type]
-        }))
-    }
+            [type]: !prev[type],
+        }));
+    
+        if (type === "screen") {
+            const newScreenSharingState = !screenSharing;
+    
+            try {
+                if (newScreenSharingState) {
+                    const screenStream = await navigator.mediaDevices.getDisplayMedia({
+                      video: { mediaSource: "screen" },
+                      audio: true,
+                    });
+                  
+                    setMyStream(screenStream);
+                    setScreenSharing(true);
+                  
+                    Object.values(calls).forEach((call) => {
+                      call.peerConnection.getSenders().forEach((sender) => {
+                        const track = screenStream.getTracks().find((t) => t.kind === sender.track.kind);
+                        if (track) {
+                          sender.replaceTrack(track);
+                        }
+                      });
+                    });
+                  } else {
+                    stopScreenSharing();
+                }
+            } catch (error) {
+                console.error("Error toggling screen sharing:", error);
+            }
+        }
+    };
+    
+    const stopScreenSharing = () => {
+        if (myStream) {
+          myStream.getTracks().forEach((track) => track.stop());
+      
+          navigator.mediaDevices
+            .getUserMedia({ video: true, audio: true })
+            .then((cameraStream) => {
+              setMyStream(cameraStream);
+              setScreenSharing(false);
+      
+              Object.values(calls).forEach((call) => {
+                call.peerConnection.getSenders().forEach((sender) => {
+                  const track = cameraStream.getTracks().find((t) => t.kind === sender.track.kind);
+                  if (track) {
+                    sender.replaceTrack(track);
+                  }
+                });
+              });
+            })
+            .catch((error) => {
+              console.error("Error resuming camera stream:", error);
+            });
+        }
+      };
 
     const value = {
         myStream,
@@ -181,7 +263,7 @@ export const CallProvider = ({ children }) => {
         usersVideos,
         toggleMedia,
         userMedia,
-        leaveCall
+        leaveCall,screenSharing
     };
 
     return (
