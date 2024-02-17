@@ -1,74 +1,47 @@
 import { RiSendPlaneLine } from "react-icons/ri";
+import { MdOutlineAttachFile } from "react-icons/md";
+import UseChatContext from "../../../context/chat/useChatContext";
 import useUserContext from "../../../context/user/useUserContext";
-import UploadFile from "../upload-file/upload-file.component";
-import {useEffect, useState} from "react";
 
-const ConversationInput = ({sendMessage,message,setMessage,className}) => {
-    const {currentUser} = useUserContext()
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [fileData,setFileData] = useState(null)
-    
 
-    const handleFileChange = async(event) => {
-        setSelectedFile(event.target.files[0]);
-    };
+const ConversationInput = ({sendMessage,messageBody, setMessage}) => {
 
-    useEffect(() => {
-        if (selectedFile) {
-            const reader = new FileReader();
-
-            reader.onload = () => {
-                const buffer = reader.result;
-                const bytes = new Uint8Array(buffer);
-
-                setFileData(Array.from(bytes))
-
-            };
-
-            reader.readAsArrayBuffer(selectedFile);
-        }
-    }, [selectedFile]);
-
-    const handleSendMessage = () => {
-        if(fileData){
-            sendMessage(fileData,true,selectedFile);
-        } else {
-            sendMessage(message.messageBody,false)
-        }
+    const {chosenUser } =  UseChatContext()
+    const { currentUser } = useUserContext()
+    const handleSendMessage = () =>{
+        sendMessage();
         setMessage({
-            fileName: "",
-            content: "",
             messageBody: "",
+            receiver: chosenUser.uid,
             sender: currentUser?.uid,
             date: "",
-        })
-        setFileData(null)
-        setSelectedFile(null);
+        });
     }
+
     const setMsg = (event) => {
-        setMessage(prev => ({...prev, messageBody : event.target.value}));
+        setMessage(prev => ({...prev, messageBody: event.target.value}));
     };
 
     return (
-        <div className={className}>
-            <div className="bg-dark-clr-80 rounded-full p-0.5 flex w-full">
-                <UploadFile selectedFile={selectedFile} handleFileChange={handleFileChange} setSelectedFile={setSelectedFile} setFileData={setFileData}/>
-                <input
-                    value={message.messageBody}
-                    onChange={setMsg}
-                    className="input mt-0.5 focus:outline-none
-                     border-none bg-transparent text-white flex-grow w-full"
-                    placeholder={selectedFile ? "You can't send text message" : "Type something..."}
-                    disabled={!!selectedFile}
-                />
-                <div className="hover:bg-light-clr-10 cursor-pointer border-none hover:bg-opacity-40 rounded-full p-3.5 flex justify-center items-center ">
-                    <RiSendPlaneLine
-                        className="text-white w-5 h-5 "
-                        onClick={handleSendMessage}
-                    />
-                </div>
+      <div className="p-4">
+          <div className="bg-black rounded-full flex p-2">
+            <div className="btn border-none bg-grey hover:bg-opacity-40 bg-opacity-20 rounded-3xl items-center p-3">
+              <MdOutlineAttachFile className="text-white w-7 h-7 transform rotate-45" />
+            </div>
+            <input
+              value={messageBody}
+              onChange={setMsg}
+              className="input mx-2 border-none bg-black text-white flex-grow"
+              placeholder="Type something..."
+            />
+            <div className="btn bg-grey bg-opacity-20 border-none hover:bg-opacity-40 rounded-3xl p-3 items-center">
+              <RiSendPlaneLine
+                className="text-white w-5 h-5"
+                onClick={handleSendMessage}
+              />
             </div>
         </div>
+      </div>
     )
 }
 

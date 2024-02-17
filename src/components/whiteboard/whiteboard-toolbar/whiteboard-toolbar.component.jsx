@@ -11,7 +11,7 @@ import LineEditor from "../line-editor/line-editor.component";
 import { useState } from "react";
 import ColorPicker from "../color-picker/color-picker.component";
 
-const WhiteboardToolbar = ({isInteractive}) => {
+const WhiteboardToolbar = () => {
     const [showLineEditor, setShowLineEditor] = useState(false)
     const [showBucket, setShowBucket] = useState(false)
 
@@ -21,8 +21,7 @@ const WhiteboardToolbar = ({isInteractive}) => {
         currentMode,
         setToDrawing,
         setToGrab,
-        setToBucket, 
-        isBucket } = useWhiteboardContext()
+        setToBucket, isBucket } = useWhiteboardContext()
 
     const toggleShowLineEditor = () => {
         setShowBucket(false)
@@ -33,9 +32,6 @@ const WhiteboardToolbar = ({isInteractive}) => {
         setShowLineEditor(false)
         setShowBucket(prev => !prev)
     }
-    const getPrev = () => {
-        restorePrevious(isInteractive)
-    }
 
     return (
         <div className="absolute w-full p-4 bottom-0 flex justify-between text-white text-xl">
@@ -43,7 +39,7 @@ const WhiteboardToolbar = ({isInteractive}) => {
                 <FaExpand className="cursor-pointer" onClick={toggleExpansion}/>
             </div>
             <div className="bg-dark-clr-50 rounded-full z-50 flex w-1/4 justify-between items-center px-3">
-                <PiArrowCounterClockwiseBold className="cursor-pointer" onClick={getPrev}/>
+                <PiArrowCounterClockwiseBold className="cursor-pointer" onClick={restorePrevious}/>
                 <BsCursorFill 
                     onClick={setToGrab}
                     className={`cursor-pointer ${!isBucket&&[CURSOR_MODES.hand,CURSOR_MODES.grabing].includes(currentMode) && "text-selected"}`}

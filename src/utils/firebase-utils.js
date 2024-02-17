@@ -19,6 +19,7 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig);
 
+
 export const auth = getAuth();
 
 export const registerUser = async (email, password) => {
@@ -49,3 +50,4 @@ export const getCurrentUser = () => {
 const provider = new GoogleAuthProvider();
 
 export const loginInWithGoogle = async () => signInWithPopup(auth, provider);
+  

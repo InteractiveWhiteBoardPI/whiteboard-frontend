@@ -23,6 +23,8 @@ const ControlMenu = () => {
 
     const {userMedia, toggleMedia} = useCallContext()
 
+    console.log(userMedia)
+
     return (
         <div className="w-full h-[10%] flex items-center justify-center">
             <div className="flex rounded-full w-4/6 bg-dark-clr-70 justify-between text-2xl text-white">

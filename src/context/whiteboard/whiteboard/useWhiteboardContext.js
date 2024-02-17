@@ -7,7 +7,6 @@ const useWhiteboardContext = () => {
         setCanvas,
         context,
         boundaries,
-        isExpanded,
         toggleExpansion,
         currentMode,
         setToDrawing,
@@ -22,12 +21,7 @@ const useWhiteboardContext = () => {
         bucketColor, 
         setBucketColor,
         whiteboardData,
-        setWhiteboardData,
-        setWhiteboardName,
-        drawCanvas,
-        offset, 
-        setOffset,
-
+        setWhiteboardName
     } = useContext(WhiteboardContext)
 
     return {
@@ -35,7 +29,6 @@ const useWhiteboardContext = () => {
         setCanvas,
         context,
         boundaries,
-        isExpanded,
         toggleExpansion,
         currentMode,
         setToDrawing,
@@ -50,11 +43,7 @@ const useWhiteboardContext = () => {
         bucketColor,
         setBucketColor,
         whiteboardData,
-        setWhiteboardData,
-        setWhiteboardName,
-        drawCanvas,
-        offset, 
-        setOffset,
+        setWhiteboardName
     }
 }
 

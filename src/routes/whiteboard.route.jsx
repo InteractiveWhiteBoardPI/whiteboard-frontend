@@ -1,33 +1,34 @@
 import { useEffect, useState } from "react";
 import Canvas from "../components/whiteboard/canvas/canvas.component";
+import { DrawingProvider } from "../context/whiteboard/drawing/drawing.context";
+import { PanningProvider } from "../context/whiteboard/panning/panning.context";
+import { WhiteboardProvider } from "../context/whiteboard/whiteboard/whiteboard.context";
+import WhiteboardHeader from "../components/whiteboard/whiteboard-header/whiteboard-header.component";
 import { useLocation, useNavigate } from "react-router-dom";
-import useWhiteboardContext from "../context/whiteboard/whiteboard/useWhiteboardContext";
 
 const Whiteboard = () => {
-    const { whiteboardData, setWhiteboardData, isExpanded } = useWhiteboardContext()
+    const [isWhiteboardExpanded, setIsWhiteboardExpanded] = useState(false)
+    const [whiteboardData, setWhiteboardData] = useState(null)
     const location = useLocation()
     const navigate = useNavigate()
 
-    useEffect(() => {
-        const save = async () => {
-            try {
-                if (whiteboardData) {
+    useEffect(
+        () => {
+            if (whiteboardData) {
+                const save = async () => {
                     await fetch("http://localhost:8080/whiteboard/save", {
                         method: 'POST',
                         mode: 'cors',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(whiteboardData),
-                    });
+                        body: JSON.stringify(whiteboardData)
+                    })
                 }
-            } catch (error) {
-                console.error("Error saving whiteboard data:", error);
+                save()
             }
-        };
-        save();
-    }, [whiteboardData]);
-
+        }, [whiteboardData]
+    )
     useEffect(
         () => {
             const id = location.pathname.split("/whiteboard/")[1]
@@ -39,7 +40,6 @@ const Whiteboard = () => {
                 } else {
                     const json = await response.json()
                     setWhiteboardData(json)
-
                 }
             }
 
@@ -48,10 +48,23 @@ const Whiteboard = () => {
         }, [location.pathname]
     )
 
+    const toggleWhiteboardSize = () => setIsWhiteboardExpanded(prev => !prev)
     return whiteboardData && (
-        <div className={`w-screen h-screen  flex flex-col ${!isExpanded && "p-6"}`}>
-            <Canvas
-            />
+        <div className={`w-screen h-screen  flex flex-col ${!isWhiteboardExpanded && "p-6"}`}>
+            <WhiteboardProvider
+                whiteboardData={whiteboardData}
+                toggleExpansion={toggleWhiteboardSize}
+                setWhiteboardData={setWhiteboardData}
+            >
+                <WhiteboardHeader isWhiteboardExpanded={isWhiteboardExpanded} />
+                <PanningProvider>
+                    <DrawingProvider>
+                        <Canvas
+                            isExpanded={isWhiteboardExpanded}
+                        />
+                    </DrawingProvider>
+                </PanningProvider>
+            </WhiteboardProvider>
         </div>
     );
 }

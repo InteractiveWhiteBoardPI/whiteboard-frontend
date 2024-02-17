@@ -4,20 +4,16 @@ import { ChatContext } from "./chat.context";
 const UseChatContext = () => {
     const {
         groupedMessages,
-        sessionMessages,
-        setSessionMessages,
         setMessages,
         chosenUser, 
-        setChosenUser,
+        setChosenUser
     } = useContext(ChatContext)
 
     return {
         groupedMessages,
-        sessionMessages,
-        setSessionMessages,
         setMessages,
         chosenUser, 
-        setChosenUser,
+        setChosenUser
     }
 }
  

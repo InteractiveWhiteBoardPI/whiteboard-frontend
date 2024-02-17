@@ -6,8 +6,9 @@ import useUserContext from "../../../context/user/useUserContext";
 import { useNavigate } from "react-router-dom";
 
 
-const Login = () => {
-    const { setCurrentUser } = useUserContext()
+const Login = ({handleReset}) => {
+
+    const { currentUser, setCurrentUser } = useUserContext()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: "",
@@ -24,15 +25,54 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         const {user : { email , uid} } = await loginUser(formData.email, formData.password)
+        localStorage.setItem("uid", uid);
         setCurrentUser({
             email, 
             uid,
             username: email.split("@")[0]
         })
+        const response = await fetch(`http://localhost:8080/user/exist/${uid}`);
 
-        navigate("/")
+        if (!response.ok) {
+            console.error('Failed to check if user exists');
+            return;
+        }
+
+        const exists = await response.json();
+
+
+
+        if(!exists){
+            await fetch("http://localhost:8080/user/save", {
+                method: 'POST',
+                mode:'cors',
+                body: JSON.stringify(currentUser),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        } else {
+            const response = await fetch(`http://localhost:8080/user/get/${uid}`, {
+                method: 'GET',
+                mode:'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
         
+    
+            if (!response.ok) {
+                console.error('Failed to fetch user');
+                return;
+            }
+    
+            const user = await response.json();
+
+        }
+        navigate("/home")
     }
+
+        
     return (
         <div className="w-full">
             <div className="text-white text-center text-xl font-extrabold tracking-widest mb-3">
@@ -51,6 +91,7 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange.bind(this, "password")}
                 />
+                <div className="font-maven-pro font-semibold text-white text-sm ml-auto mr-4 cursor-pointer hover:text-blue-800" onClick={handleReset}>Forget password?</div>
                 <Button
                     content="login"
                     onClick={handleSubmit}
