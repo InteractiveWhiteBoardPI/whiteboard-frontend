@@ -6,31 +6,39 @@ export default UserContext
 
 export const UserProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null)
-    useEffect(
-        () => {
-            if(currentUser){
-                console.log(currentUser)
-                const saveUser = async () => {
-                    await fetch("http://localhost:8080/user/save", {
-                        method: 'POST',
-                        mode:'cors',
-                        body: JSON.stringify(currentUser),
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                }
-                saveUser()
-            }
-        }, [currentUser]
-    )
+    const [imageByte , setImageByte] = useState(null) ;
+    useEffect(() => {
+    const getUser = async () => {
+        const response = await fetch(`http://localhost:8080/user/get/${localStorage.uid}`, {
+          method: 'GET',
+          mode:'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+    
+        if (response.ok) {
+          const userData = await response.json();
+          setImageByte(userData.imageByte);
+          currentUser.username=userData.username;
+          setCurrentUser(currentUser);
+        }
+      };
 
-
+      
+    
+      getUser();
+    }, [currentUser]); 
+    
 
     const value = {
-        currentUser,
-        setCurrentUser,
-    }
+      currentUser: {
+        ...currentUser,
+        imageByte
+      },
+      setCurrentUser,
+      setImageByte,
+    };
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }

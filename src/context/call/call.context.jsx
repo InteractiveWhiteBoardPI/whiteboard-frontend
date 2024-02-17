@@ -24,6 +24,7 @@ export const CallProvider = ({ children }) => {
         if (!currentUser) return;
         if (!session.uid) return;
         socket.subscribe(`/user/${currentUser.uid}/session/toggle-media`, (message) => {
+            console.log(message)
             const { video, audio, userId, mute } = JSON.parse(message.body);
             setUsersVideos(prev => ({
                 ...prev,

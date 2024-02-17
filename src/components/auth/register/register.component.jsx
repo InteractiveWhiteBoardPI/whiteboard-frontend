@@ -6,7 +6,7 @@ import useUserContext from "../../../context/user/useUserContext";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-    const  { setCurrentUser } = useUserContext()
+    const  {currentUser, setCurrentUser } = useUserContext()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: "",
@@ -31,7 +31,18 @@ const Register = () => {
             username: email.split("@")[0]
         })
 
-        navigate("/")
+        if(currentUser){
+            await fetch("http://localhost:8080/user/save", {
+                method: 'POST',
+                mode:'cors',
+                body: JSON.stringify(currentUser),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        }
+
+        navigate("/home")
     }
 
     return (

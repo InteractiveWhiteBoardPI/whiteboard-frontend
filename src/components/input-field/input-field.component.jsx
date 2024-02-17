@@ -16,7 +16,7 @@ export default function InputField({label, value, onChange, type, className}) {
             }
             <input
                 id={uid}
-                className="font-lg bg-transparent text-white border-0 focus:border-none focus:outline-none "
+                className="font-lg w-full bg-transparent text-white border-0 focus:border-none focus:outline-none "
                 value={value}
                 onChange={onChange}
                 type={type}
