@@ -1,46 +1,45 @@
-import {useState} from "react";
+import { useState } from "react";
 import { sendPasswordResetEmail } from "firebase/auth"
 import { auth } from "../../../utils/firebase-utils"
-import {toast, ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Button from "../../button/button.component";
+import InputField from "../../input-field/input-field.component";
 
-
-export default function ForgetPassword({handleReset}) {
-
+export default function ForgetPassword({ handleReset }) {
     const [email, setEmail] = useState("")
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        sendPasswordResetEmail(auth,email).then(data=>
-            toast.success("Your reset request has sent to your email")
-        ).catch(err=>
-        toast.error("invalid email"))
+        sendPasswordResetEmail(auth, email)
+            .then(() => toast.success("Your reset request has sent to your email"))
+            .catch(() => toast.error("Invalid email"))
     }
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value)
     }
 
-    return(
-        <div className="h-[80%] w-full">
-            <div className="text-white text-md bg-black font-maven-pro font-semibold text-center
-            pt-[1vh] w-[5vw] h-[5vh] rounded-[6px] cursor-pointer hover:opacity-50"
-            onClick={handleReset}>
-                back
+    return (
+        <div className="w-full relative mt-10 flex flex-col items-center">
+            <div className="w-full mb-10">
+                <div className="text-white text-md bg-black font-bold
+                w-fit py-2 px-4 rounded-lg cursor-pointer hover:opacity-50"
+                    onClick={handleReset}>
+                    Back
+                </div>
             </div>
-            <div className="bg-black w-[40vw] h-[40vh] ml-[19vw] mt-[4vh] grid p-4 rounded-2xl grid-cols-1">
-                <h1 className="font-maven-pro font-bold text-white text-3xl ml-auto mr-auto">Reset your password</h1>
-                <div className="flex flex-wrap">
-                    <div className="font-maven-pro font-semibold text-white text-xl">
+            <div className="bg-black w-1/2 p-10 rounded-3xl">
+                <h1 className="font-bold text-white text-3xl mb-4">Reset your password</h1>
+                    <div className="text-light-clr-60">
                         Write your email :
                     </div>
-                    <form className="inline-block" onSubmit={handleSubmit}>
-                        <input
-                            placeholder="mohammed.amine203@gmail.com"
+                    <form onSubmit={handleSubmit}>
+                        <InputField 
+                            className="my-2"
+                            label="Email"
                             type="email"
                             value={email}
-                            className="text-white bg-transparent border-b-[1px] outline-none w-[20vw]
-                            h-[5vh] border-gray-400 p-2 ml-[5%]"
                             onChange={handleEmailChange}
                         />
                         <ToastContainer
@@ -49,12 +48,8 @@ export default function ForgetPassword({handleReset}) {
                             position={"top-center"}
                             theme={"dark"}
                         />
-                        <button className="text-white text-md bg-gray-900 font-maven-pro font-semibold text-center pt-[1vh]
-                        w-[7vw] h-[6vh] rounded-[6px] ml-[3vw] mt-[4vh]">
-                            R E S E T
-                        </button>
+                        <Button content="Reset" onClick={handleSubmit} className="mt-6" />
                     </form>
-                </div>
             </div>
         </div>
     )

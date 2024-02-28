@@ -72,12 +72,6 @@ const LeftMenu = () => {
           content="Chat"
           selected={currentRoute === "/chat"}
         />
-        <MenuItem
-          onClick={navigate.bind(this, "profile")}
-          icon={<IoPerson />}
-          content="profile"
-          selected={currentRoute === "/profile"}
-        />
 
       </div>
 

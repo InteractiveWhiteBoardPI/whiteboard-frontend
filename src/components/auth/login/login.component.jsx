@@ -6,16 +6,18 @@ import useUserContext from "../../../context/user/useUserContext";
 import { useNavigate } from "react-router-dom";
 
 
-const Login = ({handleReset}) => {
+const Login = ({ handleReset }) => {
 
-    const { currentUser, setCurrentUser } = useUserContext()
+    const { setCurrentUser } = useUserContext()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     })
+    const [errorMessage, setErrorMessage] = useState(null)
 
     const handleChange = (field, event) => {
+        setErrorMessage(null)
         setFormData(prev => ({
             ...prev,
             [field]: event.target.value
@@ -24,55 +26,61 @@ const Login = ({handleReset}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const {user : { email , uid} } = await loginUser(formData.email, formData.password)
-        localStorage.setItem("uid", uid);
-        setCurrentUser({
-            email, 
-            uid,
-            username: email.split("@")[0]
-        })
-        const response = await fetch(`http://localhost:8080/user/exist/${uid}`);
-
-        if (!response.ok) {
-            console.error('Failed to check if user exists');
-            return;
-        }
-
-        const exists = await response.json();
-
-
-
-        if(!exists){
-            await fetch("http://localhost:8080/user/save", {
-                method: 'POST',
-                mode:'cors',
-                body: JSON.stringify(currentUser),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        } else {
-            const response = await fetch(`http://localhost:8080/user/get/${uid}`, {
-                method: 'GET',
-                mode:'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        
-    
-            if (!response.ok) {
-                console.error('Failed to fetch user');
+        try {
+            if(formData.email === "" || formData.password === "") {
+                setErrorMessage("Please fill in all fields")
                 return;
             }
-    
-            const user = await response.json();
+            const { user: { email, uid } } = await loginUser(formData.email, formData.password)
+            setCurrentUser({
+                email,
+                uid,
+                username: email.split("@")[0]
+            })
+            const response = await fetch(`http://localhost:8080/user/get/${uid}`);
 
+            if(response.status === 200) {
+                const user = await response.json();
+                setCurrentUser({
+                    ...user,
+                    imageByte: user.imageByte ? `data:image/png;base64,${user.imageByte}` : null
+                });
+                navigate("/home")
+                return;
+            }
+            const res = await fetch("http://localhost:8080/user/save", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    uid,
+                    username: email.split("@")[0],
+                }),
+            })
+            if(res.status === 200) {
+                const user = await res.json()
+                setCurrentUser({...user})
+                navigate("/home")
+            } else {
+                setErrorMessage("Something went wrong")
+            }
+        } catch (error) {
+            console.log(error)
+            if(error.code === "auth/invalid-credential") {
+                setErrorMessage("Invalid credentials!")
+                return;
+            }
+            if(error.code === "auth/invalid-email") {
+                setErrorMessage("Invalid email!")
+                return;
+            }
+            setErrorMessage("Something Went Wrong")
         }
-        navigate("/home")
     }
 
-        
+
     return (
         <div className="w-full">
             <div className="text-white text-center text-xl font-extrabold tracking-widest mb-3">
@@ -89,9 +97,13 @@ const Login = ({handleReset}) => {
                     label="Password"
                     type="password"
                     value={formData.password}
+                    autoComplete="on"
                     onChange={handleChange.bind(this, "password")}
                 />
                 <div className="font-maven-pro font-semibold text-white text-sm ml-auto mr-4 cursor-pointer hover:text-blue-800" onClick={handleReset}>Forget password?</div>
+                {
+                    errorMessage && <div className="text-red-500 text-sm text-center">{errorMessage}</div>
+                }
                 <Button
                     content="login"
                     onClick={handleSubmit}

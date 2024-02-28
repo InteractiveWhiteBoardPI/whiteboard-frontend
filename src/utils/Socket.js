@@ -34,6 +34,17 @@ class Socket {
       this.client.subscribe(endpoint, callback);
     }
   }
+  clearSubscriptions() {
+    if (this.client && this.connected) {
+      this.client.subscriptions = {}
+    }
+  }
+
+  unsubscribe(endpoint) {
+    if (this.client && this.connected) {
+      this.client.unsubscribe(endpoint)
+    }
+  }
 }
 const socket = new Socket()
 socket.connect()

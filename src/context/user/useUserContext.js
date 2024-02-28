@@ -5,13 +5,11 @@ const useUserContext = () => {
     const {
         currentUser,
         setCurrentUser,
-        setImageByte,
     } = useContext(UserContext)
 
     return {
         currentUser,
         setCurrentUser,
-        setImageByte,
     }
 }
 

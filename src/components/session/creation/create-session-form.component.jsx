@@ -24,7 +24,6 @@ const CreationSessionForm = () => {
     })
   }
   const handleCreateButtonClick = async () => {
-    console.log(currentUser)
     try {
       const response = await fetch(`http://localhost:8080/session/createSession`, {
         method: "POST",
@@ -42,7 +41,6 @@ const CreationSessionForm = () => {
           setSession(json)
 
           navigate("/home/create-session/copy-link")
-          localStorage.setItem("hostId", true);
         }
       } else {
         setErrorMessage("Could not create session")

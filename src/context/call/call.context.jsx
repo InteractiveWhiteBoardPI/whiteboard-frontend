@@ -24,7 +24,6 @@ export const CallProvider = ({ children }) => {
         if (!currentUser) return;
         if (!session.uid) return;
         socket.subscribe(`/user/${currentUser.uid}/session/toggle-media`, (message) => {
-            console.log(message)
             const { video, audio, userId, mute } = JSON.parse(message.body);
             setUsersVideos(prev => ({
                 ...prev,
@@ -42,7 +41,7 @@ export const CallProvider = ({ children }) => {
 
     useEffect(() => {
         if (!session.uid) return;
-        socket.subscribe(`/user/${session.uid}/session/user-leaved`, (message) => {
+        socket.subscribe(`/user/${session.uid}/session/user-left`, (message) => {
             const userId = message.body;
             setUsersVideos((prev) => {
                 const updatedUsers = { ...prev };
@@ -87,6 +86,7 @@ export const CallProvider = ({ children }) => {
                 });
 
                 peer.on("call", (call) => {
+                    console.log("call", call);
                     call.answer(stream);
                     call.on("stream", (remoteStream) => {
                         setUsersVideos(prev => ({
@@ -109,15 +109,14 @@ export const CallProvider = ({ children }) => {
                 })
 
                 peer.on("open", id => {
+                    console.log("id", id);
                     socket.send(`/app/session/user-join/${sessionId}`, id);
                 })
 
                 peer.on("disconnected", () => {
                     peer.destroy();
                 });
-
-                peer.call(currentUserId, stream)
-
+                
                 peerRef.current = peer;
             }).catch((err) => {
                 console.log("Error getting user media", err);
@@ -131,8 +130,8 @@ export const CallProvider = ({ children }) => {
 
     const handleNewUserConnection = (userId, stream) => {
         const call = peerRef.current.call(userId, stream);
-
-
+        console.log("call", call);
+        if (!call) return;
         call.on("stream", (remoteStream) => {
             setUsersVideos(prev => ({
                 ...prev,

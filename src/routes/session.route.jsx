@@ -11,7 +11,6 @@ const SessionCreated = () => {
   useEffect(
     () => {
       if (!id) return navigate("/home")
-      if (id) return
       const getSession = async () => {
         try {
           const res = await fetch(`http://localhost:8080/session/get/${id}`)
@@ -19,7 +18,6 @@ const SessionCreated = () => {
           const data = await res.json()
           setSession(data)
         } catch (err) {
-          console.log(err)
           navigate("/home")
         }
       }
