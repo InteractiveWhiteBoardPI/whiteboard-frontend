@@ -11,7 +11,6 @@ const SessionCreated = () => {
   useEffect(
     () => {
       if (!id) return navigate("/home")
-      if (session.uid) return
       const getSession = async () => {
         try {
           const res = await fetch(`http://localhost:8080/session/get/${id}`)
