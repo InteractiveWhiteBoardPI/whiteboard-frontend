@@ -8,14 +8,13 @@ import {
 import { TbHeadphonesOff } from "react-icons/tb";
 import useUserContext from "../../../context/user/useUserContext";
 
-const UserVideo = ({ userName, media, mute, stream, pinned, onThumbtackClick }) => {
+const UserVideo = ({ username, media, mute, stream, pinned, onThumbtackClick }) => {
   const { currentUser } = useUserContext();
-  const isCurrentUser = userName === currentUser.userName;
 
   return (
     <>
       <div className="absolute top-2 left-2 z-10 bg-light-clr-20 py-1 px-2 rounded-full text-sm">
-        {isCurrentUser ? "You" : userName}
+        {username === currentUser.username ? "You" : username}
       </div>
       <div className="absolute bottom-2 left-2 z-10 w-10 h-10 bg-light-clr-20 py-1 px-2 rounded-full text-2xl flex items-center">
         {media.audio ? (

@@ -20,9 +20,6 @@ export const CallProvider = ({ children }) => {
     const [calls, setCalls] = useState({});
     const peerRef = useRef();
     const [screenSharing, setScreenSharing] = useState(false);
-   
-
-  
 
     useEffect(() => {
         if (!currentUser) return;
@@ -41,7 +38,7 @@ export const CallProvider = ({ children }) => {
                 }
             }))
         })
-    }, [currentUser,session]);
+    }, [currentUser, session]);
 
     useEffect(() => {
         if (!session.uid) return;
@@ -52,7 +49,7 @@ export const CallProvider = ({ children }) => {
                 delete updatedUsers[userId];
                 return updatedUsers;
             });
-    
+
             setCalls((prev) => {
                 const updatedCalls = { ...prev };
                 delete updatedCalls[userId];
@@ -68,12 +65,12 @@ export const CallProvider = ({ children }) => {
             if (videoTrack) {
                 videoTrack.enabled = userMedia.video;
             }
-    
+
             const audioTrack = prev.getAudioTracks()[0];
             if (audioTrack) {
                 audioTrack.enabled = userMedia.audio;
             }
-    
+
             return prev;
         })
         Object.keys(calls).forEach((userId) => {
@@ -82,18 +79,18 @@ export const CallProvider = ({ children }) => {
     }, [userMedia]);
 
     useEffect(() => {
-  
+
         const supportsWeb = navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
-    
+
         if (!supportsWeb) {
-          setUserMedia((prev) => ({
-            ...prev,
-            video: false,
-            audio: false,
-            mute: true,
-          }));
+            setUserMedia((prev) => ({
+                ...prev,
+                video: false,
+                audio: false,
+                mute: true,
+            }));
         }
-      }, []);
+    }, []);
 
     const initializeCall = (sessionId, currentUserId) => {
         const getUserMediaConfig = screenSharing
@@ -197,65 +194,69 @@ export const CallProvider = ({ children }) => {
 
 
     const toggleMedia = async (type) => {
-        setUserMedia((prev) => ({
-            ...prev,
-            [type]: !prev[type],
-        }));
-    
+        if(screenSharing && type==="video") return
         if (type === "screen") {
             const newScreenSharingState = !screenSharing;
-    
+
             try {
                 if (newScreenSharingState) {
                     const screenStream = await navigator.mediaDevices.getDisplayMedia({
-                      video: { mediaSource: "screen" },
-                      audio: true,
+                        video: { mediaSource: "screen" },
+                        audio: true,
                     });
-                  
+                    const videoRecord = screenStream.getVideoTracks()[0]
+                    videoRecord.onended = () => {
+                        stopScreenSharing()
+                    }
                     setMyStream(screenStream);
                     setScreenSharing(true);
-                  
+
                     Object.values(calls).forEach((call) => {
-                      call.peerConnection.getSenders().forEach((sender) => {
-                        const track = screenStream.getTracks().find((t) => t.kind === sender.track.kind);
-                        if (track) {
-                          sender.replaceTrack(track);
-                        }
-                      });
+                        call.peerConnection.getSenders().forEach((sender) => {
+                            const track = screenStream.getTracks().find((t) => t.kind === sender.track.kind);
+                            if (track) {
+                                sender.replaceTrack(track);
+                            }
+                        });
                     });
-                  } else {
+                } else {
                     stopScreenSharing();
                 }
             } catch (error) {
                 console.error("Error toggling screen sharing:", error);
             }
+        } else {
+            setUserMedia((prev) => ({
+                ...prev,
+                [type]: !prev[type],
+            }));
         }
     };
-    
+
     const stopScreenSharing = () => {
         if (myStream) {
-          myStream.getTracks().forEach((track) => track.stop());
-      
-          navigator.mediaDevices
-            .getUserMedia({ video: true, audio: true })
-            .then((cameraStream) => {
-              setMyStream(cameraStream);
-              setScreenSharing(false);
-      
-              Object.values(calls).forEach((call) => {
-                call.peerConnection.getSenders().forEach((sender) => {
-                  const track = cameraStream.getTracks().find((t) => t.kind === sender.track.kind);
-                  if (track) {
-                    sender.replaceTrack(track);
-                  }
+            myStream.getTracks().forEach((track) => track.stop());
+
+            navigator.mediaDevices
+                .getUserMedia({ video: true, audio: true })
+                .then((cameraStream) => {
+                    setMyStream(cameraStream);
+                    setScreenSharing(false);
+
+                    Object.values(calls).forEach((call) => {
+                        call.peerConnection.getSenders().forEach((sender) => {
+                            const track = cameraStream.getTracks().find((t) => t.kind === sender.track.kind);
+                            if (track) {
+                                sender.replaceTrack(track);
+                            }
+                        });
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error resuming camera stream:", error);
                 });
-              });
-            })
-            .catch((error) => {
-              console.error("Error resuming camera stream:", error);
-            });
         }
-      };
+    };
 
     const value = {
         myStream,
@@ -263,7 +264,7 @@ export const CallProvider = ({ children }) => {
         usersVideos,
         toggleMedia,
         userMedia,
-        leaveCall,screenSharing
+        leaveCall, screenSharing
     };
 
     return (
