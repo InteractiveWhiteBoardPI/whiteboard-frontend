@@ -7,6 +7,7 @@ import {
     FaVideo,
     FaVideoSlash,
 } from "react-icons/fa";
+import { MdOutlineStopScreenShare } from "react-icons/md";
 import LeaveCall from "./leave-call.component";
 import { TbHeadphonesFilled, TbHeadphonesOff } from "react-icons/tb";
 import { FaDisplay, FaPhoneFlip } from "react-icons/fa6";
@@ -16,7 +17,7 @@ import InviteMenu from "./invite-menu/invite-menu.component";
 
 const ControlMenu = () => {
     const [showWhiteboard, setShowWhiteboard] = useState(false);
-    const { userMedia, toggleMedia } = useCallContext()
+    const { userMedia, toggleMedia, screenSharing } = useCallContext()
     const navigate = useNavigate();
 
     const openWhiteboard = () => {
@@ -70,8 +71,14 @@ const ControlMenu = () => {
                         <FaVideoSlash style={{ color: "#f00" }} />
                     )}
                 </button>
-                <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
-                    <FaDisplay />
+                <button
+                    className="bg-black w-14 h-14 rounded-full flex justify-center items-center"
+                    onClick={toggleMedia.bind(null, "screen")}
+                >
+                    {screenSharing ?
+                        ( <MdOutlineStopScreenShare /> )
+                        : (
+                            <FaDisplay />)}
                 </button>
                 <LeaveCall />
             </div>

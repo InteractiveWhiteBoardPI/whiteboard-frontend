@@ -9,7 +9,10 @@ const useCallContext = () => {
         setUsersVideos,
         toggleMedia,
         userMedia,
-        leaveCall
+        leaveCall,
+        screenSharing,
+        pinnedUser,  
+        setPinnedUser, 
     } = useContext(CallContext)
 
     return {
@@ -19,7 +22,10 @@ const useCallContext = () => {
         setUsersVideos,
         toggleMedia,
         userMedia,
-        leaveCall
+        leaveCall,
+        screenSharing ,
+        pinnedUser,  
+        setPinnedUser, 
     }
 }
 export default useCallContext
