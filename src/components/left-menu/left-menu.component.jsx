@@ -6,6 +6,7 @@ import MenuItem from "./menu-item";
 import { SlCursor } from "react-icons/sl";
 import { BsChatDots } from "react-icons/bs";
 import { HiOutlineTrash } from "react-icons/hi2";
+import { IoPerson } from "react-icons/io5";
 
 const LeftMenu = () => {
   const [currentRoute, setCurrentRoute] = useState("")
@@ -62,6 +63,7 @@ const LeftMenu = () => {
                 selected={currentRoute === "/join-session"}
               />
             </div>
+            
           )
         }
         <MenuItem
@@ -70,6 +72,7 @@ const LeftMenu = () => {
           content="Chat"
           selected={currentRoute === "/chat"}
         />
+
       </div>
 
 

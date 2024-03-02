@@ -3,7 +3,7 @@ import UseChatContext from "../../../context/chat/useChatContext";
 import useUserContext from "../../../context/user/useUserContext";
 import InputField from "../../input-field/input-field.component";
 
-const UserSelector = () => {
+const UserSelector = ({onUserSelect}) => {
     const [users, setUsers] = useState([]);
     const [newUsers, setNewUsers] = useState([]);
     const [searchText, setSearchText] = useState("");
@@ -51,6 +51,10 @@ const UserSelector = () => {
     const handleChosenUser = (user) => {
         setChosenUser(user);
         setAttemptedSearch(false);
+        setSearchText(user.username);
+        if(onUserSelect){
+            onUserSelect(user.uid, user.username);
+        }
     };
     return (
         <div className="flex dropdown justify-center ">
