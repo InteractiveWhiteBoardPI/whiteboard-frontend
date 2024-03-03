@@ -68,6 +68,7 @@ export const CallProvider = ({ children }) => {
 
             return prev;
         })
+        //for each user in the session we send them the new userMedia
         Object.keys(calls).forEach((userId) => {
             socket.send(`/app/session/toggle-media/${currentUser.uid}/${userId}`, JSON.stringify(userMedia));
         })
@@ -85,6 +86,7 @@ export const CallProvider = ({ children }) => {
                     handleNewUserConnection(userId, stream);
                 });
 
+                //upcoming call
                 peer.on("call", (call) => {
                     call.answer(stream);
                     call.on("stream", (remoteStream) => {
@@ -93,8 +95,8 @@ export const CallProvider = ({ children }) => {
                             [call.peer]: {
                                 stream: remoteStream,
                                 media: {
-                                    video: remoteStream.getVideoTracks()[0].enabled,
-                                    audio: remoteStream.getAudioTracks()[0].enabled,
+                                    video: remoteStream.getVideoTracks()[0]?.enabled,
+                                    audio: remoteStream.getAudioTracks()[0]?.enabled,
                                 }
                             }
                         }))
@@ -107,6 +109,8 @@ export const CallProvider = ({ children }) => {
 
                 })
 
+                //when u create a peer there is a delay for it to be created so we wait for it
+                //id de celui qui a creer la peer currentUserId ( id utilisée dans le constructor de la peer)
                 peer.on("open", id => {
                     socket.send(`/app/session/user-join/${sessionId}`, id);
                 })
@@ -128,15 +132,17 @@ export const CallProvider = ({ children }) => {
 
     };
 
-    const handleNewUserConnection = (userId, stream) => {
+    //userId of the newly joined user, and the stream of the current user
+    const handleNewUserConnection = (userId, stream) => { //peerRef.current to access the object saved in the ref
         const call = peerRef.current.call(userId, stream);
 
-
+        //listening on the event , stream of the other user and u add it to ur videos
         call.on("stream", (remoteStream) => {
             setUsersVideos(prev => ({
                 ...prev,
                 [userId]: {
                     stream: remoteStream,
+                    //saving the state of my media , current
                     media: {
                         video: remoteStream.getVideoTracks()[0].enabled,
                         audio: remoteStream.getAudioTracks()[0].enabled,
@@ -145,6 +151,7 @@ export const CallProvider = ({ children }) => {
             }))
         })
 
+        //saving the call object
         setCalls(prev => ({
             ...prev,
             [userId]: call
@@ -154,7 +161,7 @@ export const CallProvider = ({ children }) => {
     const leaveCall = (userId, sessionId) => {
         peerRef.current.disconnect();
         if (myStream) {
-            myStream.getTracks().forEach(track => track.stop());
+            myStream.getTracks().forEach(track => track.stop()); //browser stops reading ur media
         }
 
         peerRef.current = {};

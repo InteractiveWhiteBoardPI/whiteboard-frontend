@@ -14,6 +14,7 @@ import JoinSession from "./routes/join-session.route";
 import InteractiveWhiteboard from "./routes/intercative-whiteboard.route";
 import SessionBody from "./routes/session-body.route";
 
+
 const App = () => {
   const { setCurrentUser } = useUserContext();
   const navigate = useNavigate();

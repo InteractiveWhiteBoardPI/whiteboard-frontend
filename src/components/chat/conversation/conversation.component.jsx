@@ -104,6 +104,7 @@ const Conversation = () => {
     <div className="flex flex-col w-full h-full">
       <ConversationHeader 
         username={chosenUser.username}
+        chosenUserId={chosenUser.uid}
       />
       <MessagesList
         user={chosenUser.uid}
@@ -113,9 +114,9 @@ const Conversation = () => {
         setMessage={setMessage}
         sendMessage={sendMessage}
         className="p-4 w-full"
-
-
       />
+
+
     </div>
   );
 };
