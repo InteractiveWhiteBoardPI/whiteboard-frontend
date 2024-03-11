@@ -27,17 +27,13 @@ const ViewSelectedWhiteboard = ({whiteboard}) => {
 
     return whiteboard && (
         <div className="w-full h-[70%] bg-white rounded-2xl relative overflow-hidden">
-            <img src={whiteboard.data} className="absolute w-full h-full top-0 left-0 z-0"/>
+            <img src={whiteboard.displayImage} className="absolute w-full h-full top-0 left-0 z-0"/>
             <div
                 onClick={openWhiteboard}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 className={`z-10 w-full h-full absolute transition cursor-pointer duration-300 flex items-center justify-center ${showOpenButton && "bg-dark-clr-40 backdrop-blur"}`}>
                 {showOpenButton && <Button content="Open"/>}
-            </div>
-            <div className="w-full flex justify-end gap-3 px-3 pt-2">
-                <Button content="Invite" outlined/>
-                <Button content="Share"/>
             </div>
         </div>
     )

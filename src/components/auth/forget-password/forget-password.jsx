@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { sendPasswordResetEmail } from "firebase/auth"
 import { auth } from "../../../utils/firebase-utils"
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Button from "../../button/button.component";
 import InputField from "../../input-field/input-field.component";
+import ToastDisplayer from "../../toast-displayer/toast-displayer.component";
 
 export default function ForgetPassword({ handleReset }) {
     const [email, setEmail] = useState("")
@@ -42,12 +43,8 @@ export default function ForgetPassword({ handleReset }) {
                             value={email}
                             onChange={handleEmailChange}
                         />
-                        <ToastContainer
-                            hideProgressBar={false}
-                            autoClose={5000}
-                            position={"top-center"}
-                            theme={"dark"}
-                        />
+                        <ToastDisplayer />
+                        
                         <Button content="Reset" onClick={handleSubmit} className="mt-6" />
                     </form>
             </div>

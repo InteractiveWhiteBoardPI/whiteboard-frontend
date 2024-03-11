@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import useUserContext from "../../context/user/useUserContext";
 import { FaBell, FaRegBell } from "react-icons/fa";
+import ToastDisplayer from "../toast-displayer/toast-displayer.component";
 
 export default function NotificationComponent({ notifications }) {
     const [usernames, setUsernames] = useState({});
@@ -38,7 +39,7 @@ export default function NotificationComponent({ notifications }) {
         if (response.status === 201) {
             navigate("/session/" + url)
         } else {
-            console.log("Could not join session")
+            toast.error("Failed to join session")
         }
     }
 
@@ -56,6 +57,7 @@ export default function NotificationComponent({ notifications }) {
 
     return (
         <div className="dropdown dropdown-bottom dropdown-end">
+            <ToastDisplayer />
             <div tabIndex={0} role="button">
                 <FaRegBell className="text-2xl hover:cursor-pointer hover:opacity-75" />
             </div>

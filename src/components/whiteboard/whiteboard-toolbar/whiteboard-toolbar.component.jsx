@@ -1,7 +1,6 @@
-import { PiArrowCounterClockwiseBold, PiRectangleLight } from "react-icons/pi";
+import { PiArrowCounterClockwiseBold } from "react-icons/pi";
 import { FaExpand, FaChevronDown, FaChevronUp ,FaPen } from "react-icons/fa";
 import { BsCursorFill } from "react-icons/bs";
-import { TfiText } from "react-icons/tfi";
 import { LuPaintBucket } from "react-icons/lu";
 import ZoomSelector from "../zoom-selector/zoom-selector.component";
 import useDrawingContext from "../../../context/whiteboard/drawing/useDrawingContext";
@@ -75,11 +74,6 @@ const WhiteboardToolbar = ({isInteractive}) => {
                                 className="absolute top-0 -translate-y-[120%] translate-x-5"/>
                         )
                     }
-                </div>
-                <TfiText />
-                <div className="flex items-center">
-                    <PiRectangleLight className="text-2xl cursor-pointer" />
-                    <FaChevronDown className="text-sm cursor-pointer" />
                 </div>
             </div>
             <ZoomSelector

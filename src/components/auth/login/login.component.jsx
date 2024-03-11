@@ -67,7 +67,6 @@ const Login = ({ handleReset }) => {
                 setErrorMessage("Something went wrong")
             }
         } catch (error) {
-            console.log(error)
             if(error.code === "auth/invalid-credential") {
                 setErrorMessage("Invalid credentials!")
                 return;

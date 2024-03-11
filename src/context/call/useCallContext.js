@@ -6,20 +6,27 @@ const useCallContext = () => {
         myStream,
         initializeCall,
         usersVideos,
-        setUsersVideos,
         toggleMedia,
         userMedia,
-        leaveCall
+        leaveCall,
+        errorState,
+        setErrorState,
+        pinnedUser, 
+        pinUser
+        
     } = useContext(CallContext)
 
     return {
         myStream,
         initializeCall,
         usersVideos,
-        setUsersVideos,
         toggleMedia,
         userMedia,
-        leaveCall
+        leaveCall,
+        errorState,
+        setErrorState,
+        pinnedUser, 
+        pinUser
     }
 }
 export default useCallContext

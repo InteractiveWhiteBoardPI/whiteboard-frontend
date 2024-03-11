@@ -5,6 +5,7 @@ import UseChatContext from "../context/chat/useChatContext";
 
 const Chat = () => {
   const { chosenUser } = UseChatContext()
+  
   return (
     <div className="w-4/5 h-full pr-4 pb-4">
       <h1 className="h-[10%] text-2xl font-bold">Chat</h1>

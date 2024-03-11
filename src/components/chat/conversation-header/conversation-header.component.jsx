@@ -22,12 +22,15 @@ const ConversationHeader = ({ username , imageUrl }) => {
     <div>
       <div className="flex items-center w-full text-white rounded-r-2xl py-2 px-2 justify-between rounded-b-2xl bg-dark-clr-30">
         <div className="flex items-center">
-                {imageUrl==='data:image/png;base64,null' && <RxAvatar className="text-6xl" />}
-                {imageUrl!=='data:image/png;base64,null' && <img 
-                            src={imageUrl}
-                            className="w-[4vw] h-[8vh] rounded-full ml-2 mr-2"
-                        />
-                    }
+          {
+            imageUrl ? 
+            <img 
+              src={`data:image/png;base64,${imageUrl}`}
+              className="w-14 h-14 rounded-full ml-2 mr-2"
+            />
+            :
+            <RxAvatar className="text-6xl" />
+          }
           <div className="ml-2">{username}</div>
         </div>
         <div className="flex space-x-2 text-2xl">

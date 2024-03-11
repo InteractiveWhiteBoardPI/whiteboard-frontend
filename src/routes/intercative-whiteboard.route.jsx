@@ -3,10 +3,12 @@ import Canvas from '../components/whiteboard/canvas/canvas.component'
 import socket from '../utils/Socket'
 import { useParams } from 'react-router-dom'
 import useWhiteboardContext from '../context/whiteboard/whiteboard/useWhiteboardContext'
+import useCallContext from '../context/call/useCallContext'
 
 const InteractiveWhiteboard = () => {
     const { id } = useParams()
     const { setMovesArray } = useWhiteboardContext()
+    const { usersVideos, userMedia }  = useCallContext()
     useEffect(
         () => {
             const handleMessageRecieved = ({body}) => {
@@ -30,7 +32,22 @@ const InteractiveWhiteboard = () => {
     )
 
     return (
-        <Canvas isInteractive/>
+        <>
+            {
+                Object.values(usersVideos).map(({stream}) => (
+                    <video ref={(videoRef) => {
+                        if (videoRef) {
+                            videoRef.srcObject = stream
+                        };
+                    }}
+                    className="absolute opacity-0"
+                    playsInline
+                    autoPlay
+                    muted={userMedia.mute}/>
+                ))
+            }
+            <Canvas isInteractive/>
+        </>
     )
 }
 

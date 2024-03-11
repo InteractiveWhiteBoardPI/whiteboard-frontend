@@ -7,43 +7,28 @@ import socket from "../../../utils/Socket";
 import UseChatContext from "../../../context/chat/useChatContext";
 import MessagesList from "../../chat/messages-list/messages-list.component";
 import DisplaySessionMessages from "./display-session-messages.component";
+import { toast } from "react-toastify";
+import ToastDisplayer from "../../toast-displayer/toast-displayer.component";
 
 const MenuBody = () => {
 
     const {currentUser} = useUserContext();
-    const { sessionMessages,setSessionMessages} =  UseChatContext()
-    const {session } = UseSessionContext()
+    const { setSessionMessages } =  UseChatContext()
+    const {session} = UseSessionContext()
 
     const [message, setMessage] = useState({
         fileName: "",
         content:"",
         messageBody: "",
-        receiver: session.uid,
+        receiver: session?.uid,
         sender: currentUser?.uid,
         date: "",
     })
 
-    useEffect(() => {
-        if(!currentUser) return
-        const messageCallback = ({ body }) => {
-
-            const msg = JSON.parse(body);
-            setSessionMessages((prev) => {
-                const addedMessages = [...prev, msg];
-                return Array.from(
-                    new Set(addedMessages.map(JSON.stringify))
-                ).map(JSON.parse);
-            });
-        };
-
-        socket.connect();
-        socket.subscribe(`/user/${session?.uid}/private`, messageCallback);
-    }, [session]);
     const sendMessage = async (messageData, isFileMessage, selectedFile = null) => {
         let newMessage;
 
         if (isFileMessage && selectedFile) {
-
             newMessage = {
                 ...message,
                 fileName: selectedFile?.name,
@@ -78,14 +63,14 @@ const MenuBody = () => {
 
             socket.send(`/app/private-message${isFileMessage ? '/file' : ''}`, JSON.stringify(json));
         } catch (error) {
-            console.error('Error sending message:', error);
-
+            toast.error("Could not send message")
         }
     };
 
 
     return (
         <div className="rounded-3xl h-[90%] w-full relative bg-dark-clr-50 py-1 px-3">
+            <ToastDisplayer />
 
 
             <div className="h-full w-full flex flex-col justify-end">

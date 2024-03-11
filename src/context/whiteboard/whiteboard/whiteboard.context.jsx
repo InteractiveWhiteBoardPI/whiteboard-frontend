@@ -29,8 +29,11 @@ export const WhiteboardProvider = ({ children }) => {
         () => {
             if (whiteboardData) {
                 const data = whiteboardData.data
-                if (data === "") return
-                    const decodedData = JSON.parse(atob(data))
+                if (data === "") {
+                    setMovesArray([])
+                    return
+                }
+                const decodedData = JSON.parse(atob(data))
                 if (decodedData.length !== movesArray.length) {
                     setMovesArray([...decodedData])
                 }

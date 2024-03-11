@@ -15,11 +15,14 @@ const NewWhiteboard = () => {
                 data: "",
                 name: "Untitled",
                 lastModified: new Date().toISOString().split("T")[0],
-                owner : currentUser
+                owner : {
+                    uid : currentUser.uid,
+                }
             })
         })
 
         const json = await response.json()
+        
 
         if(json.id){
             navigate("/whiteboard/" + json.id)

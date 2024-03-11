@@ -33,13 +33,6 @@ const LeftMenu = () => {
         />
 
         <MenuItem
-          onClick={navigate.bind(this, "starred")}
-          icon={<CiStar />}
-          content="Starred Boards"
-          selected={currentRoute === "/starred"}
-        />
-
-        <MenuItem
           onClick={toggleSessionMenu}
           icon={<CiVideoOn />}
           content="Sessions"
@@ -73,14 +66,6 @@ const LeftMenu = () => {
           selected={currentRoute === "/chat"}
         />
 
-      </div>
-
-
-      <div className="border-white border-t pt-4 justify-self-end">
-        <MenuItem
-          icon={<HiOutlineTrash />}
-          content="trash"
-        />
       </div>
     </div>
   );

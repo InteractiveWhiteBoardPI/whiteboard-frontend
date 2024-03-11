@@ -70,14 +70,8 @@ const ControlMenu = () => {
                         <FaVideoSlash style={{ color: "#f00" }} />
                     )}
                 </button>
-                <button className="bg-black w-14 h-14 rounded-full flex justify-center items-center">
-                    <FaDisplay />
-                </button>
                 <LeaveCall />
             </div>
-            <button className="bg-red-500 w-32 h-14 rounded-full text-white font-semibold">
-                End Meeting
-            </button>
         </div>
     );
 }
