@@ -7,8 +7,7 @@ import {
 import { TbHeadphonesOff } from "react-icons/tb";
 import useCallContext from "../../../context/call/useCallContext";
 
-const UserVideo = ({ username, media, stream, pinned = false, pinUser }) => {
-    const { userMedia } = useCallContext()
+const UserVideo = ({ username, media, stream, pinned = false, pinUser, muted }) => {
     return (
         <>
             <div className="absolute top-2 left-2 z-10 bg-light-clr-20 py-1 px-2 rounded-full text-sm">
@@ -56,7 +55,7 @@ const UserVideo = ({ username, media, stream, pinned = false, pinUser }) => {
                 className="w-full h-full object-cover rounded-lg"
                 playsInline
                 autoPlay
-                muted={userMedia.mute}
+                muted={muted}
             ></video>
         </>
     );

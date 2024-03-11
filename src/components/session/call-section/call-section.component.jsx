@@ -37,6 +37,7 @@ const CallSection = () => {
               stream={pinnedUser === currentUser?.uid ? myStream : usersVideos[pinnedUser].stream}
               pinUser={pinUser.bind(null, pinnedUser)}
               pinned={true}
+              muted={pinnedUser === currentUser?.uid ? true : userMedia.mute}
             />
           )
         }
@@ -51,6 +52,7 @@ const CallSection = () => {
                 media={userMedia}
                 stream={myStream}
                 pinUser={pinUser.bind(null, currentUser?.uid)}
+                muted={true}
               />
             </div>
           )
@@ -63,6 +65,7 @@ const CallSection = () => {
                 media={media}
                 stream={stream}
                 pinUser={pinUser.bind(null, userId)}
+                muted={userMedia.mute}
               />
             </div>
           ))

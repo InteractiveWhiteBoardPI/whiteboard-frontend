@@ -12,6 +12,7 @@ const ConversationName = ({ user, message }) => {
     uid: "",
     username: "",
   })
+  const [hide, setHide] = useState(false)
 
   useEffect(
     () => {
@@ -19,6 +20,7 @@ const ConversationName = ({ user, message }) => {
         const res = await fetch("http://localhost:8080/user/get/" + user)
         if (res.status !== 200) {
           setMessages(prev => prev.filter(msg => msg.sender !== user && msg.receiver !== user))
+          setHide(true)
           return
         }
         const json = await res.json()
@@ -32,7 +34,7 @@ const ConversationName = ({ user, message }) => {
     setChosenUser(fullUserData)
   }
   if (!currentUser) return
-  return (
+  return !hide && (
     <div
       onClick={handleChose}
       className={`flex items-center w-full text-white py-2 px-2 justify-between border-b border-light-clr-6 bg-light-clr-${user === chosenUser?.uid ? "20" : "10"}`}>

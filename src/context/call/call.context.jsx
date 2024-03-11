@@ -13,7 +13,7 @@ export const CallProvider = ({ children }) => {
     const [userMedia, setUserMedia] = useState({
         video: true,
         audio: true,
-        mute: true,
+        mute: false,
     });
     const { currentUser } = useUserContext();
     const { session } = useSessionContext();
